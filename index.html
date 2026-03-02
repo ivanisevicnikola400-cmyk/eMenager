@@ -130,8 +130,8 @@ body{background:var(--bg);color:var(--tx);font-family:'Segoe UI',system-ui,sans-
 <div class="mo" id="modal" onclick="if(event.target===this)cm()"><div class="md"><div class="mh"><span class="mrm" id="mrm"></span><button class="mc" onclick="cm()">✕</button></div><div class="mb" id="mbd"></div></div></div>
 <script>
 const API_BASE = 'https://nolimitnikola.app.n8n.cloud/webhook';
-const API_DASH = API_BASE + '/emanadzer-dashboard';
-const API_RESOLVE = API_BASE + '/emanadzer-resolve';
+const API_DASH = API_BASE + '/em-dash';
+const API_RESOLVE = API_BASE + '/em-resolve';
 const POLL_INTERVAL = 5000;
 
 let CF = 1, DATA = null, prevNotifCount = 0;
