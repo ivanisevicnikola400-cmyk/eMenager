@@ -3,14 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>Hotel Moskva — Pomoć u sobi</title>
+<title>Hotel Moskva — eMenadžer Tablet</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{--bg:#0B0E14;--sf:#12161F;--bd:#1C2130;--tx:#E8E8E8;--dim:#7B8294;--gld:#C9A84C;--grn:#22C55E;--red:#EF4444;--yel:#EAB308;--blu:#3B82F6}
 body{background:var(--bg);color:var(--tx);font-family:'Segoe UI',system-ui,sans-serif;min-height:100vh;display:flex;flex-direction:column;-webkit-tap-highlight-color:transparent;user-select:none}
-.head{text-align:center;padding:30px 20px 20px}
+.head{text-align:center;padding:30px 20px 20px;position:relative}
 .orn{font-size:20px;color:var(--gld);letter-spacing:6px;margin-bottom:6px}
-.htl{font-size:28px;font-weight:700;color:#FFF;letter-spacing:3px}
+.htl{font-size:28px;font-weight:700;color:#FFF;letter-spacing:3px;cursor:default}
 .hsub{font-size:11px;color:var(--dim);letter-spacing:2px;text-transform:uppercase;margin-top:4px}
 .rmid{display:inline-block;background:linear-gradient(135deg,var(--gld),#8B6914);color:#FFF;font-size:13px;font-weight:700;padding:6px 20px;border-radius:20px;margin-top:12px;letter-spacing:2px}
 .content{flex:1;padding:16px 20px;overflow-y:auto}
@@ -39,7 +39,6 @@ body{background:var(--bg);color:var(--tx);font-family:'Segoe UI',system-ui,sans-
 .send-btn{width:100%;padding:14px;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;margin-top:10px;transition:all .2s;letter-spacing:1px}
 .send-btn.urg{background:var(--red);color:#FFF}.send-btn.req{background:var(--gld);color:#0B0E14}
 .send-btn:active{transform:scale(.98);filter:brightness(.9)}
-.send-btn:disabled{opacity:.5;cursor:not-allowed}
 .success{display:none;text-align:center;padding:40px 20px}.success.show{display:block}
 .success-icon{font-size:60px;margin-bottom:16px}
 .success-title{font-size:20px;font-weight:700;color:#FFF;margin-bottom:8px}
@@ -49,14 +48,62 @@ body{background:var(--bg);color:var(--tx);font-family:'Segoe UI',system-ui,sans-
 .qi{font-size:9px;color:var(--dim);letter-spacing:1px}.qi-v{font-size:12px;color:#FFF;font-weight:600;margin-bottom:2px}
 .sending{position:fixed;inset:0;background:rgba(0,0,0,.7);display:none;align-items:center;justify-content:center;z-index:100;font-size:16px;color:#FFF}
 .sending.show{display:flex}
+
+/* === ADMIN SETUP SCREEN === */
+.admin-overlay{position:fixed;inset:0;background:var(--bg);z-index:200;display:flex;align-items:center;justify-content:center;flex-direction:column}
+.admin-overlay.hidden{display:none}
+.admin-box{background:var(--sf);border:1px solid var(--bd);border-radius:16px;padding:32px;width:380px;max-width:90vw;text-align:center}
+.admin-logo{font-size:40px;margin-bottom:12px}
+.admin-title{font-size:20px;font-weight:700;color:#FFF;margin-bottom:4px}
+.admin-sub{font-size:12px;color:var(--dim);margin-bottom:24px}
+.admin-field{width:100%;background:var(--bg);border:1px solid var(--bd);border-radius:8px;padding:12px 14px;font-size:14px;color:var(--tx);font-family:inherit;outline:none;margin-bottom:12px;text-align:center}
+.admin-field:focus{border-color:var(--gld)}
+.admin-field::placeholder{color:var(--dim)}
+.admin-select{width:100%;background:var(--bg);border:1px solid var(--bd);border-radius:8px;padding:12px 14px;font-size:14px;color:var(--tx);font-family:inherit;outline:none;margin-bottom:12px;appearance:none;-webkit-appearance:none;cursor:pointer}
+.admin-select:focus{border-color:var(--gld)}
+.admin-btn{width:100%;padding:14px;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;background:var(--gld);color:#0B0E14;letter-spacing:1px;transition:all .2s;margin-top:8px}
+.admin-btn:active{transform:scale(.98)}
+.admin-btn:disabled{opacity:.4;cursor:not-allowed}
+.admin-error{color:var(--red);font-size:12px;margin-bottom:12px;display:none}
+.admin-error.show{display:block}
+.locked-info{font-size:10px;color:var(--dim);margin-top:16px;line-height:1.6}
+.locked-info span{color:var(--gld)}
+
+/* Admin unlock hint */
+.unlock-hint{position:fixed;bottom:8px;left:50%;transform:translateX(-50%);font-size:8px;color:rgba(255,255,255,.08);letter-spacing:1px;z-index:10}
 </style>
 </head>
 <body>
+
+<!-- ADMIN SETUP OVERLAY -->
+<div class="admin-overlay" id="adminOverlay">
+  <div class="admin-box">
+    <div class="admin-logo">🔐</div>
+    <div class="admin-title">eMenadžer Setup</div>
+    <div class="admin-sub">Unesite admin šifru i izaberite sobu za ovaj tablet</div>
+    <div class="admin-error" id="adminError">Pogrešna admin šifra!</div>
+    <input type="password" class="admin-field" id="adminPass" placeholder="Admin šifra" autocomplete="off">
+    <select class="admin-select" id="adminFloor" onchange="updateRoomList()">
+      <option value="">— Izaberite sprat —</option>
+      <option value="1">1. sprat — Prizemlje</option>
+      <option value="2">2. sprat</option>
+      <option value="3">3. sprat</option>
+      <option value="4">4. sprat</option>
+    </select>
+    <select class="admin-select" id="adminRoom" disabled>
+      <option value="">— Prvo izaberite sprat —</option>
+    </select>
+    <button class="admin-btn" id="adminBtn" onclick="lockTablet()">🔒 ZAKLJUČAJ TABLET NA SOBU</button>
+    <div class="locked-info">Posle zaključavanja, tablet će prikazivati<br>samo interfejs za izabranu sobu.<br><span>Za promenu sobe: držite logo 5 sekundi</span></div>
+  </div>
+</div>
+
+<!-- MAIN TABLET INTERFACE -->
 <div class="head">
   <div class="orn">✦ ✦ ✦ ✦</div>
-  <div class="htl">HOTEL MOSKVA</div>
+  <div class="htl" id="logoArea">HOTEL MOSKVA</div>
   <div class="hsub">Beograd · od 1908. godine</div>
-  <div class="rmid" id="roomDisplay">SOBA 203</div>
+  <div class="rmid" id="roomDisplay">SOBA ---</div>
 </div>
 <div class="content">
   <div id="mainMenu">
@@ -71,6 +118,7 @@ body{background:var(--bg);color:var(--tx);font-family:'Segoe UI',system-ui,sans-
     <div class="section-t" style="margin-top:24px">Ili pošaljite slobodnu poruku</div>
     <div><textarea class="custom-ta" id="customMsg" placeholder="Napišite šta Vam treba..."></textarea><button class="send-btn req" onclick="sendCustom()">POŠALJI PORUKU</button></div>
   </div>
+
   <div class="sub-panel" id="sub-urgent">
     <div class="back-btn" onclick="goBack()">← Nazad</div>
     <div class="sub-title">🚨 Hitni problemi</div><div class="sub-desc">Naš tim će reagovati odmah.</div>
@@ -82,6 +130,7 @@ body{background:var(--bg);color:var(--tx);font-family:'Segoe UI',system-ui,sans-
     <div class="opt" onclick="sendReq('urgent','Problem sa bravom')"><div class="opt-icon">🔐</div><div class="opt-text">Problem sa bravom</div><div class="opt-arrow">›</div></div>
     <div style="margin-top:12px"><textarea class="custom-ta" id="urgMsg" placeholder="Opišite detaljnije (opciono)..." style="height:70px"></textarea><button class="send-btn urg" onclick="sendUrgCustom()">⚠ POŠALJI HITAN ZAHTEV</button></div>
   </div>
+
   <div class="sub-panel" id="sub-service">
     <div class="back-btn" onclick="goBack()">← Nazad</div>
     <div class="sub-title">🍽️ Room Service</div><div class="sub-desc">Poručite hranu ili piće u sobu.</div>
@@ -93,6 +142,7 @@ body{background:var(--bg);color:var(--tx);font-family:'Segoe UI',system-ui,sans-
     <div class="opt" onclick="sendReq('request','Vino / Šampanjac')"><div class="opt-icon">🍷</div><div class="opt-text">Vino / Šampanjac</div><div class="opt-arrow">›</div></div>
     <div style="margin-top:12px"><textarea class="custom-ta" id="svcMsg" placeholder="Posebne želje..." style="height:70px"></textarea><button class="send-btn req" onclick="sendSvcCustom()">PORUČI</button></div>
   </div>
+
   <div class="sub-panel" id="sub-housekeeping">
     <div class="back-btn" onclick="goBack()">← Nazad</div>
     <div class="sub-title">🛏️ Housekeeping</div><div class="sub-desc">Dodatni artikli ili čišćenje.</div>
@@ -103,6 +153,7 @@ body{background:var(--bg);color:var(--tx);font-family:'Segoe UI',system-ui,sans-
     <div class="opt" onclick="sendReq('request','Dodatni jastuci')"><div class="opt-icon">💤</div><div class="opt-text">Dodatni jastuci</div><div class="opt-arrow">›</div></div>
     <div class="opt" onclick="sendReq('request','Toaletne potrepštine')"><div class="opt-icon">🧴</div><div class="opt-text">Toaletne potrepštine</div><div class="opt-arrow">›</div></div>
   </div>
+
   <div class="sub-panel" id="sub-info">
     <div class="back-btn" onclick="goBack()">← Nazad</div>
     <div class="sub-title">ℹ️ Informacije</div><div class="sub-desc">Korisne informacije o hotelu.</div>
@@ -115,6 +166,7 @@ body{background:var(--bg);color:var(--tx);font-family:'Segoe UI',system-ui,sans-
     <div class="opt" onclick="sendReq('request','Kasni check-out — molim potvrdu')"><div class="opt-icon">🕑</div><div class="opt-text" style="color:var(--gld)">Zatraži kasni check-out</div><div class="opt-arrow">›</div></div>
     <div class="opt" onclick="sendReq('request','Transfer do aerodroma')"><div class="opt-icon">✈️</div><div class="opt-text" style="color:var(--gld)">Zakaži transfer</div><div class="opt-arrow">›</div></div>
   </div>
+
   <div class="success" id="successScreen">
     <div class="success-icon" id="successIcon">✅</div>
     <div class="success-title" id="successTitle">Zahtev poslat!</div>
@@ -122,6 +174,7 @@ body{background:var(--bg);color:var(--tx);font-family:'Segoe UI',system-ui,sans-
     <div class="success-btn" onclick="goHome()">← Povratak na početnu</div>
   </div>
 </div>
+
 <div class="qbar">
   <div class="qi"><div class="qi-v">14:00</div>CHECK-IN</div>
   <div class="qi"><div class="qi-v">12:00</div>CHECK-OUT</div>
@@ -129,51 +182,176 @@ body{background:var(--bg);color:var(--tx);font-family:'Segoe UI',system-ui,sans-
   <div class="qi"><div class="qi-v">FREE</div>SPA & WiFi</div>
 </div>
 <div class="sending" id="sendingOverlay">⏳ Šaljem zahtev...</div>
+<div class="unlock-hint">držite logo 5 sekundi za admin pristup</div>
 
 <script>
+// ============================================
+// CONFIG
+// ============================================
 const API = 'https://nolimitnikola.app.n8n.cloud/webhook/emanadzer-request';
-const ROOM = '203'; // Configure per tablet
-document.getElementById('roomDisplay').textContent = 'SOBA ' + ROOM;
-const h = new Date().getHours();
-document.getElementById('greeting').textContent = h<12?'Dobro jutro':h<18?'Dobar dan':'Dobro veče';
+const ADMIN_PASSWORD = 'Moskva1908!';
+const ROOMS = {
+  1: ['101','102','103','104','105','106','107','108','109','110'],
+  2: ['201','202','203','204','205','206','207','208','209','210'],
+  3: ['301','302','303','304','305','306','307','308','309','310'],
+  4: ['401','402','403','404','405']
+};
+const ROOM_TYPES = {
+  '101':'Economy','102':'Std Twin','103':'Std King','104':'Economy','105':'Std King',
+  '106':'Superior','107':'Std King','108':'Economy','109':'Std Twin','110':'Economy',
+  '201':'Superior','202':'Std King','203':'Jr Suite','204':'Std Twin','205':'Superior',
+  '206':'Std King','207':'Superior','208':'Economy','209':'Std King','210':'Superior',
+  '301':'Premium','302':'Superior','303':'Std King','304':'Superior','305':'Std Twin',
+  '306':'Std King','307':'Jr Suite','308':'Superior','309':'Economy','310':'Std King',
+  '401':'Royal','402':'Premium','403':'Jr Suite','404':'Presidential','405':'Royal'
+};
 
-function showSub(c){document.getElementById('mainMenu').style.display='none';document.querySelectorAll('.sub-panel').forEach(p=>p.classList.remove('show'));document.getElementById('sub-'+c).classList.add('show');document.getElementById('successScreen').classList.remove('show')}
-function goBack(){document.querySelectorAll('.sub-panel').forEach(p=>p.classList.remove('show'));document.getElementById('mainMenu').style.display='block';document.getElementById('successScreen').classList.remove('show')}
-function goHome(){goBack();window.scrollTo(0,0)}
+let ROOM = null;
+let holdTimer = null;
+
+// ============================================
+// ADMIN LOCK SYSTEM
+// ============================================
+function checkLock() {
+  const saved = localStorage.getItem('emanadzer_room');
+  if (saved) {
+    ROOM = saved;
+    document.getElementById('adminOverlay').classList.add('hidden');
+    document.getElementById('roomDisplay').textContent = 'SOBA ' + ROOM;
+    updateGreeting();
+  }
+}
+
+function updateRoomList() {
+  const floor = document.getElementById('adminFloor').value;
+  const sel = document.getElementById('adminRoom');
+  sel.innerHTML = '';
+  if (!floor) {
+    sel.innerHTML = '<option value="">— Prvo izaberite sprat —</option>';
+    sel.disabled = true;
+    return;
+  }
+  sel.disabled = false;
+  sel.innerHTML = '<option value="">— Izaberite sobu —</option>';
+  ROOMS[floor].forEach(r => {
+    const opt = document.createElement('option');
+    opt.value = r;
+    opt.textContent = 'Soba ' + r + ' — ' + (ROOM_TYPES[r] || '');
+    sel.appendChild(opt);
+  });
+}
+
+function lockTablet() {
+  const pass = document.getElementById('adminPass').value;
+  const room = document.getElementById('adminRoom').value;
+  const err = document.getElementById('adminError');
+
+  if (pass !== ADMIN_PASSWORD) {
+    err.textContent = 'Pogrešna admin šifra!';
+    err.classList.add('show');
+    return;
+  }
+  if (!room) {
+    err.textContent = 'Izaberite sobu!';
+    err.classList.add('show');
+    return;
+  }
+
+  err.classList.remove('show');
+  ROOM = room;
+  localStorage.setItem('emanadzer_room', room);
+  document.getElementById('adminOverlay').classList.add('hidden');
+  document.getElementById('roomDisplay').textContent = 'SOBA ' + ROOM;
+  updateGreeting();
+}
+
+// Long press logo to unlock (5 seconds)
+function setupUnlock() {
+  const logo = document.getElementById('logoArea');
+  logo.addEventListener('pointerdown', () => {
+    holdTimer = setTimeout(() => {
+      if (confirm('Otključati admin setup? Trenutna soba: ' + ROOM)) {
+        localStorage.removeItem('emanadzer_room');
+        ROOM = null;
+        document.getElementById('adminOverlay').classList.remove('hidden');
+        document.getElementById('adminPass').value = '';
+        document.getElementById('adminFloor').value = '';
+        document.getElementById('adminRoom').innerHTML = '<option value="">— Prvo izaberite sprat —</option>';
+        document.getElementById('adminRoom').disabled = true;
+        document.getElementById('adminError').classList.remove('show');
+      }
+    }, 5000);
+  });
+  logo.addEventListener('pointerup', () => clearTimeout(holdTimer));
+  logo.addEventListener('pointerleave', () => clearTimeout(holdTimer));
+}
+
+// ============================================
+// GUEST INTERFACE
+// ============================================
+function updateGreeting() {
+  const h = new Date().getHours();
+  document.getElementById('greeting').textContent = h < 12 ? 'Dobro jutro' : h < 18 ? 'Dobar dan' : 'Dobro veče';
+}
+
+function showSub(c) {
+  document.getElementById('mainMenu').style.display = 'none';
+  document.querySelectorAll('.sub-panel').forEach(p => p.classList.remove('show'));
+  document.getElementById('sub-' + c).classList.add('show');
+  document.getElementById('successScreen').classList.remove('show');
+}
+
+function goBack() {
+  document.querySelectorAll('.sub-panel').forEach(p => p.classList.remove('show'));
+  document.getElementById('mainMenu').style.display = 'block';
+  document.getElementById('successScreen').classList.remove('show');
+}
+
+function goHome() { goBack(); window.scrollTo(0, 0); }
 
 async function sendReq(type, msg) {
+  if (!ROOM) return alert('Tablet nije podešen!');
   document.getElementById('sendingOverlay').classList.add('show');
   try {
     const r = await fetch(API, {
       method: 'POST',
-      headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({room:ROOM, type:type, category:type==='urgent'?'urgent':'service', message:msg, guestName:''})
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ room: ROOM, type: type, category: type === 'urgent' ? 'urgent' : 'service', message: msg, guestName: '' })
     });
     const data = await r.json();
     console.log('Response:', data);
-  } catch(e) { console.error('Send error:', e); }
+  } catch (e) { console.error('Send error:', e); }
   document.getElementById('sendingOverlay').classList.remove('show');
   showSuccess(type, msg);
 }
 
-function sendCustom(){const m=document.getElementById('customMsg').value.trim();if(!m)return;sendReq('request',m);document.getElementById('customMsg').value=''}
-function sendUrgCustom(){const m=document.getElementById('urgMsg').value.trim();sendReq('urgent',m||'Hitan problem');document.getElementById('urgMsg').value=''}
-function sendSvcCustom(){const m=document.getElementById('svcMsg').value.trim();if(!m)return;sendReq('request','Room service: '+m);document.getElementById('svcMsg').value=''}
+function sendCustom() { const m = document.getElementById('customMsg').value.trim(); if (!m) return; sendReq('request', m); document.getElementById('customMsg').value = ''; }
+function sendUrgCustom() { const m = document.getElementById('urgMsg').value.trim(); sendReq('urgent', m || 'Hitan problem'); document.getElementById('urgMsg').value = ''; }
+function sendSvcCustom() { const m = document.getElementById('svcMsg').value.trim(); if (!m) return; sendReq('request', 'Room service: ' + m); document.getElementById('svcMsg').value = ''; }
 
 function showSuccess(type, msg) {
-  document.getElementById('mainMenu').style.display='none';
-  document.querySelectorAll('.sub-panel').forEach(p=>p.classList.remove('show'));
+  document.getElementById('mainMenu').style.display = 'none';
+  document.querySelectorAll('.sub-panel').forEach(p => p.classList.remove('show'));
   document.getElementById('successScreen').classList.add('show');
-  if(type==='urgent'){
-    document.getElementById('successIcon').textContent='🚨';
-    document.getElementById('successTitle').textContent='Hitna prijava poslata!';
-    document.getElementById('successMsg').textContent='"'+msg+'" — Naš tim dolazi odmah.';
+  if (type === 'urgent') {
+    document.getElementById('successIcon').textContent = '🚨';
+    document.getElementById('successTitle').textContent = 'Hitna prijava poslata!';
+    document.getElementById('successMsg').textContent = '"' + msg + '" — Naš tim dolazi odmah.';
   } else {
-    document.getElementById('successIcon').textContent='✅';
-    document.getElementById('successTitle').textContent='Zahtev primljen!';
-    document.getElementById('successMsg').textContent='"'+msg+'" — Prosečno vreme: 5 minuta. Hvala!';
+    document.getElementById('successIcon').textContent = '✅';
+    document.getElementById('successTitle').textContent = 'Zahtev primljen!';
+    document.getElementById('successMsg').textContent = '"' + msg + '" — Prosečno vreme: 5 min. Hvala!';
   }
+  // Auto return after 30 seconds
+  setTimeout(goHome, 30000);
 }
+
+// ============================================
+// INIT
+// ============================================
+checkLock();
+setupUnlock();
+updateGreeting();
 </script>
 </body>
 </html>
