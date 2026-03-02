@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hotel Moskva — Analytics Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#07080C;--sf:#0E1017;--sf2:#141820;--bd:#1A1E2A;--bd2:#252A38;
+  --gld:#C9A84C;--gld2:#A68B3A;--gldf:rgba(201,168,76,0.08);
+  --tx:#D8D8D8;--dim:#6B7185;--dim2:#464D62;
+  --grn:#22C55E;--red:#EF4444;--blu:#3B82F6;--pur:#A855F7;--cyn:#06B6D4;
+  --ln:#161B26;
+  --ff:'DM Sans',system-ui,sans-serif;
+  --fh:'Playfair Display',Georgia,serif;
+}
+body{background:var(--bg);color:var(--tx);font-family:var(--ff);min-height:100vh}
+
+/* LOGIN */
+.login-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;background:radial-gradient(ellipse at 30% 20%,#12141E 0%,var(--bg) 70%)}
+.login-box{background:var(--sf);border:1px solid var(--bd);border-radius:16px;padding:48px 40px;width:420px;max-width:92vw;text-align:center;box-shadow:0 32px 80px rgba(0,0,0,.6)}
+.l-stars{color:var(--gld);font-size:11px;letter-spacing:8px;margin-bottom:8px}
+.l-hotel{font-family:var(--fh);font-size:22px;color:#FFF;letter-spacing:6px}
+.l-moskva{font-family:var(--fh);font-size:38px;color:var(--gld);letter-spacing:8px;font-weight:700;margin:-2px 0 4px}
+.l-sub{font-size:9px;color:var(--dim2);letter-spacing:4px}
+.l-div{height:1px;background:linear-gradient(90deg,transparent,rgba(201,168,76,.25),transparent);margin:28px 0}
+.l-title{font-size:10px;color:var(--dim2);letter-spacing:4px;margin-bottom:20px}
+.l-input{width:100%;padding:14px 18px;background:var(--bg);border:1px solid var(--bd);border-radius:8px;color:#FFF;font-size:14px;font-family:var(--ff);margin-bottom:12px;outline:none;transition:border .2s}
+.l-input:focus{border-color:var(--gld)}
+.l-input::placeholder{color:#2A2E3A}
+.l-btn{width:100%;padding:15px;background:var(--gld);color:var(--bg);border:none;border-radius:8px;font-size:13px;font-weight:700;letter-spacing:3px;cursor:pointer;font-family:var(--fh);transition:all .2s;margin-top:4px}
+.l-btn:hover{background:#D4B35A;transform:translateY(-1px)}
+.l-btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
+.l-err{background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);color:var(--red);padding:10px;border-radius:8px;font-size:12px;margin-bottom:12px;display:none}
+.l-foot{margin-top:24px;font-size:8px;color:#1A1E2A;letter-spacing:3px}
+
+/* DASHBOARD */
+.dash{display:none}
+.hdr{background:var(--sf);border-bottom:1px solid var(--ln);padding:14px 28px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
+.hdr-l{display:flex;align-items:center;gap:16px}
+.hdr-stars{color:var(--gld);font-size:10px;letter-spacing:5px}
+.hdr-t{font-family:var(--fh);font-size:17px;color:#FFF;letter-spacing:3px}
+.hdr-t em{color:var(--gld);font-style:normal}
+.hdr-sep{height:28px;width:1px;background:var(--bd)}
+.hdr-lbl{font-size:10px;color:var(--dim2);letter-spacing:2px}
+.hdr-r{display:flex;align-items:center;gap:10px}
+.usr{display:flex;align-items:center;gap:8px;background:var(--gldf);padding:5px 14px 5px 5px;border-radius:20px;border:1px solid rgba(201,168,76,.12)}
+.usr-av{width:26px;height:26px;border-radius:50%;background:var(--gld);color:var(--bg);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;font-family:var(--fh)}
+.usr-n{font-size:10px;color:var(--gld);font-weight:500}.usr-r{font-size:8px;color:var(--dim2)}
+.live{display:flex;align-items:center;gap:5px;padding:5px 12px;border-radius:16px;background:rgba(34,197,94,.08)}
+.live-d{width:6px;height:6px;border-radius:50%;background:var(--grn);animation:pls 1.5s infinite}
+.live-t{font-size:10px;color:var(--grn);font-weight:500}
+.clock{font-size:10px;color:var(--dim2);font-family:'DM Sans',monospace}
+.btn-sm{background:none;border:1px solid var(--bd);border-radius:6px;color:var(--dim);font-size:10px;padding:5px 12px;cursor:pointer;font-family:var(--ff);transition:all .2s}
+.btn-sm:hover{border-color:var(--gld);color:var(--gld)}
+@keyframes pls{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* TABS */
+.tabs{background:var(--sf);border-bottom:1px solid var(--ln);padding:0 28px;display:flex;gap:0;overflow-x:auto}
+.tab{background:none;border:none;cursor:pointer;padding:13px 20px;font-size:11px;letter-spacing:1px;color:var(--dim2);border-bottom:2px solid transparent;font-family:var(--ff);transition:all .15s;white-space:nowrap}
+.tab.on{color:var(--gld);border-bottom-color:var(--gld);font-weight:600}
+.tab:hover{color:var(--gld)}
+
+/* CONTENT */
+.cnt{padding:24px 28px;max-width:1300px;margin:0 auto}
+.row{display:grid;gap:12px;margin-bottom:16px}
+.r6{grid-template-columns:repeat(6,1fr)}
+.r4{grid-template-columns:repeat(4,1fr)}
+.r3{grid-template-columns:repeat(3,1fr)}
+.r2{grid-template-columns:repeat(2,1fr)}
+@media(max-width:1100px){.r6{grid-template-columns:repeat(3,1fr)}.r4{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:700px){.r6,.r4,.r3{grid-template-columns:1fr}.r2{grid-template-columns:1fr}.cnt{padding:16px 12px}.hdr{padding:12px 16px}.tabs{padding:0 12px}}
+
+/* STAT CARD */
+.sc{background:var(--sf);border:1px solid var(--bd);border-radius:10px;padding:18px 16px;position:relative;overflow:hidden;transition:border .2s}
+.sc:hover{border-color:var(--bd2)}
+.sc.acc{border-top:2px solid var(--gld)}
+.sc.grn{border-top:2px solid var(--grn)}
+.sc.red{border-top:2px solid var(--red)}
+.sc.blu{border-top:2px solid var(--blu)}
+.sc-ic{font-size:20px;margin-bottom:6px}
+.sc-v{font-size:28px;font-weight:700;color:#FFF;font-family:var(--fh);line-height:1}
+.sc.acc .sc-v{color:var(--gld)}
+.sc.grn .sc-v{color:var(--grn)}
+.sc.red .sc-v{color:var(--red)}
+.sc.blu .sc-v{color:var(--blu)}
+.sc-l{font-size:9px;color:var(--dim);letter-spacing:1.5px;text-transform:uppercase;margin-top:6px}
+.sc-s{font-size:9px;color:var(--dim2);margin-top:2px}
+.sc-bar{position:absolute;bottom:0;left:0;height:3px;border-radius:0 3px 0 0;transition:width .8s ease}
+
+/* TABLE CARD */
+.tc{background:var(--sf);border:1px solid var(--bd);border-radius:10px;overflow:hidden;margin-bottom:16px}
+.tc-h{padding:14px 18px;border-bottom:1px solid var(--ln);display:flex;justify-content:space-between;align-items:center}
+.tc-t{font-size:10px;color:var(--gld);letter-spacing:2px;text-transform:uppercase;font-weight:600}
+.tc-a{font-size:9px;color:var(--dim);cursor:pointer;letter-spacing:1px}.tc-a:hover{color:var(--gld)}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th{padding:10px 14px;text-align:left;color:var(--dim2);font-size:9px;letter-spacing:1.5px;text-transform:uppercase;border-bottom:1px solid var(--ln);font-weight:600}
+td{padding:11px 14px;border-bottom:1px solid var(--ln);color:var(--dim)}
+tr:hover td{background:rgba(255,255,255,.01)}
+.td-id{color:var(--gld);font-family:'DM Sans',monospace;font-size:10px;font-weight:500}
+.td-g{color:#FFF;font-weight:600}
+.td-p{color:var(--gld);font-weight:700;font-family:var(--fh)}
+.badge{display:inline-block;padding:3px 10px;border-radius:12px;font-size:9px;font-weight:600;letter-spacing:.5px}
+.b-book{background:rgba(59,130,246,.12);color:var(--blu)}
+.b-ana{background:rgba(201,168,76,.12);color:var(--gld)}
+.b-ok{background:rgba(34,197,94,.1);color:var(--grn)}
+.b-co{background:rgba(100,100,120,.1);color:#888}
+.b-conf{background:rgba(201,168,76,.1);color:var(--gld)}
+
+/* CHART */
+.chart-wrap{padding:18px;min-height:200px;position:relative}
+.chart-bar-row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.chart-label{font-size:10px;color:var(--dim);width:40px;text-align:right;flex-shrink:0}
+.chart-track{flex:1;height:22px;background:var(--bg);border-radius:4px;overflow:hidden;position:relative}
+.chart-fill{height:100%;border-radius:4px;transition:width .8s ease;display:flex;align-items:center;padding-left:8px;font-size:9px;font-weight:600}
+.chart-fill.booking{background:linear-gradient(90deg,rgba(59,130,246,.6),rgba(59,130,246,.25));color:var(--blu)}
+.chart-fill.ana{background:linear-gradient(90deg,rgba(201,168,76,.6),rgba(201,168,76,.25));color:var(--gld)}
+
+/* DONUT */
+.donut-wrap{display:flex;align-items:center;justify-content:center;gap:32px;padding:24px}
+.donut{position:relative;width:140px;height:140px}
+.donut svg{transform:rotate(-90deg)}
+.donut-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.donut-val{font-size:32px;font-weight:700;color:#FFF;font-family:var(--fh)}
+.donut-lbl{font-size:9px;color:var(--dim);letter-spacing:1px}
+.donut-legend{display:flex;flex-direction:column;gap:10px}
+.dl-item{display:flex;align-items:center;gap:8px}
+.dl-dot{width:10px;height:10px;border-radius:3px;flex-shrink:0}
+.dl-text{font-size:11px;color:var(--dim)}.dl-val{font-size:13px;color:#FFF;font-weight:600;margin-left:auto}
+
+/* CHECK-IN/OUT LIST */
+.cio-item{display:flex;align-items:center;gap:14px;padding:12px 18px;border-bottom:1px solid var(--ln)}
+.cio-item:last-child{border:none}
+.cio-icon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.cio-icon.ci{background:rgba(34,197,94,.1)}
+.cio-icon.co{background:rgba(239,68,68,.1)}
+.cio-name{font-size:13px;color:#FFF;font-weight:600}
+.cio-sub{font-size:10px;color:var(--dim)}
+.cio-right{margin-left:auto;text-align:right}
+.cio-room{font-size:11px;color:var(--gld);font-weight:500}
+.cio-time{font-size:9px;color:var(--dim2)}
+
+.ft{padding:20px 28px;text-align:center;border-top:1px solid var(--ln);margin-top:40px}
+.ft-t{font-size:9px;color:#1A1E2A;letter-spacing:3px}
+.loading-msg{text-align:center;padding:60px;color:var(--dim);font-size:14px}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div class="login-screen" id="loginScreen">
+  <div class="login-box">
+    <div class="l-stars">★ ★ ★ ★</div>
+    <div class="l-hotel">HOTEL</div>
+    <div class="l-moskva">MOSKVA</div>
+    <div class="l-sub">BEOGRAD · TERAZIJE · OD 1908.</div>
+    <div class="l-div"></div>
+    <div class="l-title">ANALYTICS DASHBOARD</div>
+    <div class="l-err" id="loginErr"></div>
+    <input type="text" class="l-input" id="user" placeholder="Korisničko ime" autocomplete="username" autofocus>
+    <input type="password" class="l-input" id="pass" placeholder="Lozinka" autocomplete="current-password">
+    <button class="l-btn" id="loginBtn" onclick="doLogin()">PRIJAVITE SE</button>
+    <div class="l-foot">POWERED BY AI · NOLIMITNIKOLA</div>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div class="dash" id="dash">
+  <div class="hdr">
+    <div class="hdr-l">
+      <div><div class="hdr-stars">★ ★ ★ ★</div><div class="hdr-t">HOTEL <em>MOSKVA</em></div></div>
+      <div class="hdr-sep"></div>
+      <span class="hdr-lbl">ANALYTICS</span>
+    </div>
+    <div class="hdr-r">
+      <div class="usr"><div class="usr-av" id="uAv">D</div><div><div class="usr-n" id="uNm">demo</div><div class="usr-r">Administrator</div></div></div>
+      <button class="btn-sm" onclick="fetchData()">↻ Osveži</button>
+      <div class="live"><div class="live-d"></div><span class="live-t">LIVE</span></div>
+      <span class="clock" id="clock">--:--:--</span>
+      <button class="btn-sm" onclick="doLogout()" style="border-color:rgba(239,68,68,.2);color:var(--red)">Odjava</button>
+    </div>
+  </div>
+  <div class="tabs">
+    <button class="tab on" data-t="overview" onclick="goTab('overview',this)">Pregled</button>
+    <button class="tab" data-t="reservations" onclick="goTab('reservations',this)">Rezervacije</button>
+    <button class="tab" data-t="occupancy" onclick="goTab('occupancy',this)">Popunjenost</button>
+    <button class="tab" data-t="revenue" onclick="goTab('revenue',this)">Prihod</button>
+    <button class="tab" data-t="checkinout" onclick="goTab('checkinout',this)">Check-in/out</button>
+  </div>
+  <div class="cnt" id="cnt"><div class="loading-msg">⏳ Učitavanje podataka...</div></div>
+  <div class="ft"><div class="ft-t">★ HOTEL MOSKVA ANALYTICS · POWERED BY AI · NOLIMITNIKOLA ★</div></div>
+</div>
+
+<script>
+const API = 'https://nolimitnikola.app.n8n.cloud/webhook/em-dash';
+const CREDS = {demo:'demo123', admin:'Moskva2024!'};
+let D = null, tab = 'overview', refreshId = null;
+
+document.getElementById('user').addEventListener('keyup',e=>{if(e.key==='Enter')document.getElementById('pass').focus()});
+document.getElementById('pass').addEventListener('keyup',e=>{if(e.key==='Enter')doLogin()});
+
+function doLogin(){
+  const u=document.getElementById('user').value.trim(),p=document.getElementById('pass').value.trim(),er=document.getElementById('loginErr');
+  if(!u||!p){er.textContent='Unesite korisničko ime i lozinku';er.style.display='block';return}
+  if(CREDS[u]&&CREDS[u]===p){er.style.display='none';document.getElementById('loginScreen').style.display='none';
+    document.getElementById('dash').style.display='block';document.getElementById('uAv').textContent=u[0].toUpperCase();
+    document.getElementById('uNm').textContent=u;fetchData();refreshId=setInterval(fetchData,60000);
+    setInterval(()=>{document.getElementById('clock').textContent=new Date().toLocaleTimeString('sr-RS')},1000);
+  }else{er.textContent='Pogrešno korisničko ime ili lozinka';er.style.display='block'}
+}
+function doLogout(){clearInterval(refreshId);document.getElementById('dash').style.display='none';document.getElementById('loginScreen').style.display='flex';document.getElementById('user').value='';document.getElementById('pass').value=''}
+
+async function fetchData(){
+  try{
+    const r=await fetch(API);
+    if(r.ok){const j=await r.json();if(j.stats)D=j}
+  }catch(e){console.log('Fetch error:',e)}
+  if(!D)D=buildFromEmDash();
+  render();
+}
+
+function buildFromEmDash(){return{stats:{total:0,vacant:35,occupied:0,bookingGuests:0,anaGuests:0,activeGuests:0},allRes:[],floors:[]}}
+
+function goTab(t,btn){tab=t;document.querySelectorAll('.tab').forEach(b=>b.classList.remove('on'));if(btn)btn.classList.add('on');render()}
+
+function src(s){return(s||'').toLowerCase().includes('booking')?'<span class="badge b-book">Booking</span>':'<span class="badge b-ana">Ana AI</span>'}
+function stat(s){const m={'Aktivan':'b-ok','Potvrđena':'b-conf','Potvrden':'b-conf','Checked Out':'b-co','Nova':'b-conf','Potvrdjena':'b-conf','Potvrdjeno':'b-conf'};return `<span class="badge ${m[s]||'b-conf'}">${s||'Aktivan'}</span>`}
+function sc(ic,lb,v,sub,cls){return `<div class="sc ${cls||''}"><div class="sc-ic">${ic}</div><div class="sc-v">${v}</div><div class="sc-l">${lb}</div>${sub?`<div class="sc-s">${sub}</div>`:''}</div>`}
+function pct(a,b){return b>0?Math.round(a/b*100):0}
+
+function render(){
+  const el=document.getElementById('cnt');
+  if(!D||!D.stats){el.innerHTML='<div class="loading-msg">Nema podataka</div>';return}
+  const s=D.stats;
+  const allRes=D.aktivneSobe||D.allRes||[];
+  const totalRes=allRes.length||s.activeGuests||0;
+  const bookN=s.bookingGuests||allRes.filter(r=>(r.Izvor||r.izvor||'').toLowerCase().includes('booking')).length;
+  const anaN=s.anaGuests||allRes.filter(r=>!(r.Izvor||r.izvor||'').toLowerCase().includes('booking')).length;
+  const occ=s.occupied||0, vac=s.vacant||35, tot=s.total||35;
+  const occPct=pct(occ,tot);
+  const today=new Date().toISOString().split('T')[0];
+
+  // Revenue calc
+  let totalRev=0,monthRev=0,weekRev=0,todayRev=0;
+  const weekAgo=new Date();weekAgo.setDate(weekAgo.getDate()-7);
+  const monthStart=today.substring(0,7);
+  allRes.forEach(r=>{
+    const c=parseFloat((r.Cena||r.cena||'0').toString().replace(/[^\d.]/g,''))||0;
+    totalRev+=c;
+    const ci=(r.CheckIn||r.checkIn||r.checkin||'').substring(0,10);
+    if(ci.startsWith(monthStart))monthRev+=c;
+    if(ci>=weekAgo.toISOString().split('T')[0])weekRev+=c;
+    if(ci===today)todayRev+=c;
+  });
+
+  const avgPrice=totalRes>0?Math.round(totalRev/totalRes):0;
+
+  // Check-ins/outs today
+  const todayCi=allRes.filter(r=>(r.CheckIn||r.checkIn||'').substring(0,10)===today);
+  const todayCo=allRes.filter(r=>(r.CheckOut||r.checkOut||'').substring(0,10)===today);
+
+  switch(tab){
+    case 'overview':
+      el.innerHTML=`
+        <div class="row r6">
+          ${sc('📋','Ukupno rezervacija',totalRes,'aktivnih',`acc`)}
+          ${sc('🏨','Zauzete sobe',occ,occPct+'% popunjenost','grn')}
+          ${sc('🟢','Slobodne sobe',vac,'od '+tot,'blu')}
+          ${sc('➡️','Check-in danas',todayCi.length,'')}
+          ${sc('⬅️','Check-out danas',todayCo.length,'')}
+          ${sc('💰','Mesečni prihod','€'+monthRev.toLocaleString(),'','acc')}
+        </div>
+        <div class="row r4">
+          ${sc('🌐','Booking.com',bookN,'rezervacija','blu')}
+          ${sc('🤖','Ana AI',anaN,'rezervacija','acc')}
+          ${sc('💶','Prosečna cena','€'+avgPrice,'po rezervaciji')}
+          ${sc('📊','Popunjenost',occPct+'%','hotela','grn')}
+        </div>
+        <div class="row r2">
+          <div class="tc"><div class="tc-h"><span class="tc-t">✦ Poslednje rezervacije</span><span class="tc-a" onclick="goTab('reservations',document.querySelector('[data-t=reservations]'))">Sve →</span></div>
+            <div style="overflow-x:auto"><table><thead><tr><th>Gost</th><th>Soba</th><th>Check-in</th><th>Check-out</th><th>Cena</th><th>Izvor</th></tr></thead><tbody>
+            ${allRes.slice(0,6).map(r=>`<tr><td class="td-g">${r.Gost||r.gost||r['Ime Gosta']||''}</td><td>${r.Soba||r.soba||''}</td><td>${(r.CheckIn||r.checkIn||'').substring(0,10)}</td><td>${(r.CheckOut||r.checkOut||'').substring(0,10)}</td><td class="td-p">€${parseFloat((r.Cena||r.cena||'0').toString().replace(/[^\d.]/g,''))||0}</td><td>${src(r.Izvor||r.izvor)}</td></tr>`).join('')}
+            </tbody></table></div>
+          </div>
+          <div class="tc"><div class="tc-h"><span class="tc-t">✦ Booking vs Ana AI</span></div>
+            <div class="chart-wrap">
+              <div class="chart-bar-row"><div class="chart-label">Book</div><div class="chart-track"><div class="chart-fill booking" style="width:${pct(bookN,totalRes||1)}%">${bookN}</div></div></div>
+              <div class="chart-bar-row"><div class="chart-label">Ana</div><div class="chart-track"><div class="chart-fill ana" style="width:${pct(anaN,totalRes||1)}%">${anaN}</div></div></div>
+              <div style="margin-top:16px;text-align:center;font-size:11px;color:var(--dim)">
+                Booking: <strong style="color:var(--blu)">${pct(bookN,totalRes||1)}%</strong> · Ana AI: <strong style="color:var(--gld)">${pct(anaN,totalRes||1)}%</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row r2">
+          <div class="tc"><div class="tc-h"><span class="tc-t">✦ Danas dolaze</span></div>
+            ${todayCi.length>0?todayCi.map(r=>`<div class="cio-item"><div class="cio-icon ci">➡️</div><div><div class="cio-name">${r.Gost||r.gost||''}</div><div class="cio-sub">${r.TipSobe||r.tipSobe||''} · ${r.BrojGostiju||r.brojGostiju||'?'} gostiju</div></div><div class="cio-right"><div class="cio-room">Soba ${r.Soba||r.soba||'?'}</div><div class="cio-time">${src(r.Izvor||r.izvor)}</div></div></div>`).join(''):'<div style="padding:24px;text-align:center;color:var(--dim)">Nema check-in-ova danas</div>'}
+          </div>
+          <div class="tc"><div class="tc-h"><span class="tc-t">✦ Danas odlaze</span></div>
+            ${todayCo.length>0?todayCo.map(r=>`<div class="cio-item"><div class="cio-icon co">⬅️</div><div><div class="cio-name">${r.Gost||r.gost||''}</div><div class="cio-sub">${r.TipSobe||r.tipSobe||''}</div></div><div class="cio-right"><div class="cio-room">Soba ${r.Soba||r.soba||'?'}</div><div class="cio-time">do 12:00</div></div></div>`).join(''):'<div style="padding:24px;text-align:center;color:var(--dim)">Nema check-out-ova danas</div>'}
+          </div>
+        </div>`;
+      break;
+
+    case 'reservations':
+      el.innerHTML=`
+        <div class="row r4">
+          ${sc('📋','Ukupno',totalRes,'rezervacija','acc')}
+          ${sc('🌐','Booking.com',bookN,'','blu')}
+          ${sc('🤖','Ana AI',anaN,'','acc')}
+          ${sc('💰','Ukupan prihod','€'+totalRev.toLocaleString(),'','')}
+        </div>
+        <div class="tc"><div class="tc-h"><span class="tc-t">✦ Sve aktivne rezervacije</span><span class="tc-a">${totalRes} ukupno</span></div>
+          <div style="overflow-x:auto"><table><thead><tr><th>ID</th><th>Gost</th><th>Soba</th><th>Tip</th><th>Check-in</th><th>Check-out</th><th>Gostiju</th><th>Cena</th><th>Izvor</th></tr></thead><tbody>
+          ${allRes.map(r=>`<tr>
+            <td class="td-id">${r.IDRez||r.idRez||r['ID Rezervacije']||'-'}</td>
+            <td class="td-g">${r.Gost||r.gost||r['Ime Gosta']||''}</td>
+            <td>${r.Soba||r.soba||''}</td>
+            <td>${r.TipSobe||r.tipSobe||r['Tip Sobe']||''}</td>
+            <td>${(r.CheckIn||r.checkIn||'').substring(0,10)}</td>
+            <td>${(r.CheckOut||r.checkOut||'').substring(0,10)}</td>
+            <td>${r.BrojGostiju||r.brojGostiju||''}</td>
+            <td class="td-p">€${parseFloat((r.Cena||r.cena||'0').toString().replace(/[^\d.]/g,''))||0}</td>
+            <td>${src(r.Izvor||r.izvor)}</td>
+          </tr>`).join('')}
+          </tbody></table></div>
+        </div>`;
+      break;
+
+    case 'occupancy':
+      const occData=D.roomState||{};
+      const rooms=Object.entries(occData);
+      const flr=[{n:'1. sprat',r:rooms.filter(([k])=>k.startsWith('1'))},{n:'2. sprat',r:rooms.filter(([k])=>k.startsWith('2'))},{n:'3. sprat',r:rooms.filter(([k])=>k.startsWith('3'))},{n:'4. sprat',r:rooms.filter(([k])=>k.startsWith('4'))}];
+      el.innerHTML=`
+        <div class="row r3">
+          ${sc('🏨','Popunjenost',occPct+'%','od '+tot+' soba','acc')}
+          ${sc('🔵','Zauzete',occ,'soba','blu')}
+          ${sc('🟢','Slobodne',vac,'soba','grn')}
+        </div>
+        <div class="tc"><div class="tc-h"><span class="tc-t">✦ Popunjenost — dijagram</span></div>
+          <div class="donut-wrap">
+            <div class="donut"><svg width="140" height="140" viewBox="0 0 140 140"><circle cx="70" cy="70" r="58" fill="none" stroke="var(--bd)" stroke-width="14"/><circle cx="70" cy="70" r="58" fill="none" stroke="var(--gld)" stroke-width="14" stroke-dasharray="${occPct*3.64} ${364-occPct*3.64}" stroke-linecap="round"/></svg><div class="donut-center"><div class="donut-val">${occPct}%</div><div class="donut-lbl">ZAUZETO</div></div></div>
+            <div class="donut-legend">
+              <div class="dl-item"><div class="dl-dot" style="background:var(--gld)"></div><span class="dl-text">Zauzete</span><span class="dl-val">${occ}</span></div>
+              <div class="dl-item"><div class="dl-dot" style="background:var(--grn)"></div><span class="dl-text">Slobodne</span><span class="dl-val">${vac}</span></div>
+              <div class="dl-item"><div class="dl-dot" style="background:var(--blu)"></div><span class="dl-text">Booking.com</span><span class="dl-val">${bookN}</span></div>
+              <div class="dl-item"><div class="dl-dot" style="background:var(--pur)"></div><span class="dl-text">Ana AI</span><span class="dl-val">${anaN}</span></div>
+            </div>
+          </div>
+        </div>
+        ${flr.map(f=>{
+          const fOcc=f.r.filter(([,v])=>v.state!=='vacant').length;
+          const fTot=f.r.length;
+          return `<div class="tc"><div class="tc-h"><span class="tc-t">${f.n} — ${fOcc}/${fTot} zauzeto</span><span class="tc-a">${pct(fOcc,fTot)}%</span></div>
+            <div style="padding:14px;display:flex;flex-wrap:wrap;gap:8px">
+            ${f.r.map(([num,v])=>`<div style="width:80px;padding:10px 8px;border-radius:8px;text-align:center;font-size:11px;border:1px solid ${v.state==='vacant'?'var(--bd)':'rgba(201,168,76,.3)'};background:${v.state==='vacant'?'var(--bg)':'var(--gldf)'}"><div style="font-weight:700;color:${v.state==='vacant'?'var(--dim)':'#FFF'};font-size:14px">${num}</div>${v.guest?`<div style="font-size:8px;color:var(--gld);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${v.guest}</div>`:''}</div>`).join('')}
+            </div></div>`;
+        }).join('')}`;
+      break;
+
+    case 'revenue':
+      el.innerHTML=`
+        <div class="row r4">
+          ${sc('💰','Ukupan prihod','€'+totalRev.toLocaleString(),'sve rezervacije','acc')}
+          ${sc('📅','Ovog meseca','€'+monthRev.toLocaleString(),'','grn')}
+          ${sc('📆','Ove nedelje','€'+weekRev.toLocaleString(),'','blu')}
+          ${sc('💶','Prosečno','€'+avgPrice,'po rezervaciji','')}
+        </div>
+        <div class="tc"><div class="tc-h"><span class="tc-t">✦ Prihod po izvoru</span></div>
+          <div class="chart-wrap">
+            ${[{n:'Booking.com',v:allRes.filter(r=>(r.Izvor||r.izvor||'').toLowerCase().includes('booking')).reduce((s,r)=>s+(parseFloat((r.Cena||r.cena||'0').toString().replace(/[^\d.]/g,''))||0),0),c:'booking'},
+               {n:'Ana AI',v:allRes.filter(r=>!(r.Izvor||r.izvor||'').toLowerCase().includes('booking')).reduce((s,r)=>s+(parseFloat((r.Cena||r.cena||'0').toString().replace(/[^\d.]/g,''))||0),0),c:'ana'}
+            ].map(x=>`<div class="chart-bar-row"><div class="chart-label">${x.n.substring(0,6)}</div><div class="chart-track"><div class="chart-fill ${x.c}" style="width:${pct(x.v,totalRev||1)}%">€${x.v.toLocaleString()}</div></div></div>`).join('')}
+          </div>
+        </div>
+        <div class="tc"><div class="tc-h"><span class="tc-t">✦ Top rezervacije po ceni</span></div>
+          <div style="overflow-x:auto"><table><thead><tr><th>Gost</th><th>Soba</th><th>Tip</th><th>Noćenja</th><th>Cena</th><th>Izvor</th></tr></thead><tbody>
+          ${[...allRes].sort((a,b)=>(parseFloat((b.Cena||b.cena||'0').toString().replace(/[^\d.]/g,''))||0)-(parseFloat((a.Cena||a.cena||'0').toString().replace(/[^\d.]/g,''))||0)).slice(0,10).map(r=>{
+            const ci=new Date(r.CheckIn||r.checkIn||''),co=new Date(r.CheckOut||r.checkOut||'');
+            const nights=Math.max(1,Math.round((co-ci)/(86400000)));
+            return `<tr><td class="td-g">${r.Gost||r.gost||''}</td><td>${r.Soba||r.soba||''}</td><td>${r.TipSobe||r.tipSobe||''}</td><td>${nights}</td><td class="td-p">€${parseFloat((r.Cena||r.cena||'0').toString().replace(/[^\d.]/g,''))||0}</td><td>${src(r.Izvor||r.izvor)}</td></tr>`}).join('')}
+          </tbody></table></div>
+        </div>`;
+      break;
+
+    case 'checkinout':
+      const allBooking=$getAllRes('BookingRezervacije');
+      el.innerHTML=`
+        <div class="row r4">
+          ${sc('➡️','Check-in danas',todayCi.length,'','grn')}
+          ${sc('⬅️','Check-out danas',todayCo.length,'','red')}
+          ${sc('🏨','Trenutno u hotelu',occ,'gostiju','acc')}
+          ${sc('🟢','Slobodne sobe',vac,'','blu')}
+        </div>
+        <div class="row r2">
+          <div class="tc"><div class="tc-h"><span class="tc-t">➡️ Dolasci danas</span><span class="tc-a">${todayCi.length}</span></div>
+            ${todayCi.length>0?todayCi.map(r=>`<div class="cio-item"><div class="cio-icon ci">➡️</div><div><div class="cio-name">${r.Gost||r.gost||''}</div><div class="cio-sub">${r.TipSobe||r.tipSobe||''} · ${r.Email||r.email||''}</div></div><div class="cio-right"><div class="cio-room">Soba ${r.Soba||r.soba||'?'}</div><div class="cio-time">${src(r.Izvor||r.izvor)}</div></div></div>`).join(''):'<div style="padding:30px;text-align:center;color:var(--dim)">Nema dolazaka danas</div>'}
+          </div>
+          <div class="tc"><div class="tc-h"><span class="tc-t">⬅️ Odlasci danas</span><span class="tc-a">${todayCo.length}</span></div>
+            ${todayCo.length>0?todayCo.map(r=>`<div class="cio-item"><div class="cio-icon co">⬅️</div><div><div class="cio-name">${r.Gost||r.gost||''}</div><div class="cio-sub">${r.TipSobe||r.tipSobe||''}</div></div><div class="cio-right"><div class="cio-room">Soba ${r.Soba||r.soba||'?'}</div><div class="cio-time">do 12:00</div></div></div>`).join(''):'<div style="padding:30px;text-align:center;color:var(--dim)">Nema odlazaka danas</div>'}
+          </div>
+        </div>`;
+      break;
+  }
+}
+function $getAllRes(){return D?.aktivneSobe||D?.allRes||[]}
+</script>
+</body>
+</html>
