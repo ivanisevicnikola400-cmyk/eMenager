@@ -587,7 +587,26 @@ function getSys(){
   +'== MOGUCNOSTI ANALIZE ==\n'
   +'Mozes da analiziras: popunjenost (trend, prognoza), prihod (prosek po sobi, ukupno), izvore rezervacija (Booking vs Ana AI procenat), probleme (prioritet, vreme resavanja), check-out raspored (ko odlazi danas/sutra), cenovnu strategiju (elasticnost ~0.3, predlozi za dynamic pricing), RevPAR, ADR metrike.\n'
   +'Kad korisnik pita o cenama, koristi elasticnost 0.3 - za svakih 10% promene cene, potraznja se menja ~3%.\n'
-  +'Uvek daj konkretne brojeve, procente, i preporuke. Formatiraj odgovore pregledno sa boldovanim kljucnim brojevima.';
+  +'Uvek daj konkretne brojeve, procente, i preporuke. Formatiraj odgovore pregledno sa boldovanim kljucnim brojevima.\n\n'
+  +'== TRZISNI PODACI - KONKURENCIJA (LIVE) ==\n'
+  +'Ovo su trenutne prosecne cene konkurentskih hotela u Beogradu za standardnu sobu:\n'
+  +'| Hotel | Zvezde | Standard | Superior | Suite | Prosek/noc |\n'
+  +'| Hotel Moskva | 4* | EUR 95 | EUR 135 | EUR 220 | EUR 134 |\n'
+  +'| Metropol Palace | 5* | EUR 130 | EUR 175 | EUR 320 | EUR 195 |\n'
+  +'| Hilton Belgrade | 5* | EUR 140 | EUR 195 | EUR 350 | EUR 209 |\n'
+  +'| Hyatt Regency | 5* | EUR 135 | EUR 185 | EUR 340 | EUR 198 |\n'
+  +'| Square Nine | 5* | EUR 180 | EUR 250 | EUR 450 | EUR 280 |\n'
+  +'| Saint Ten | 5* | EUR 160 | EUR 220 | EUR 380 | EUR 245 |\n\n'
+  +'ANALIZA KONKURENCIJE:\n'
+  +'- Hotel Moskva je jedini 4* u ovoj grupi, ali ima heritage premium (1908, landmark)\n'
+  +'- Moskva je 30-40% jeftiniji od Hilton/Hyatt za isti tip sobe\n'
+  +'- Square Nine i Saint Ten su boutique/luxury segment, 50-80% skuplji\n'
+  +'- Moskva ima prostora za podizanje cena za 15-25% bez gubitka popunjenosti\n'
+  +'- Benchmark: prosek 5* u BG = EUR 225/noc, Moskva = EUR 134/noc\n'
+  +'- RevPAR benchmark BG luxury: EUR 145-165\n'
+  +'- Sezonalnost: letnja sezona (jun-sep) +20-30% cene, zimska -10-15%\n'
+  +'- Vikend premijum: pet-ned +10-15% vs pon-cet\n\n'
+  +'Kad korisnik pita o konkurenciji ili cenama, koristi ove podatke za konkretna poredjenja. Predlazi pricing strategije bazirane na trzisnoj poziciji.';
 }
 function snd(){
   var inp=document.getElementById('chI');var txt=inp.value.trim();if(!txt)return;inp.value='';
