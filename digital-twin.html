@@ -291,7 +291,7 @@ function openRoom(num){
   document.getElementById('fn').style.display='none';
   document.getElementById('sb').style.display='none';
   document.getElementById('rv').classList.add('open');
-  rAY=0;rAX=0.35;rZm=3;
+  rAY=0;rAX=0.35;rZm=3.5;
   var rvE=document.getElementById('rv');
   rvE.onmousedown=function(e){rDrg=true;rPv={x:e.clientX,y:e.clientY}};
   rvE.onmouseup=function(){rDrg=false};
@@ -300,6 +300,7 @@ function openRoom(num){
   rvE.onwheel=function(e){e.preventDefault();rZm=Math.max(1.5,Math.min(5,rZm+e.deltaY*0.003))};
   var rs=(D&&D.roomState&&D.roomState[num])||{state:'vacant',guest:'',source:'',checkOut:'',issue:''};
   var ud=RM[num]?RM[num].userData:{type:'Standard',fid:1};
+  var ut2=ud.type.toLowerCase();rZm=(ut2.indexOf("royal")>=0||ut2.indexOf("presidential")>=0)?5.5:(ut2.indexOf("premium")>=0||ut2.indexOf("jr")>=0||ut2.indexOf("superior")>=0)?4.5:(ut2.indexOf("king")>=0)?4:3.8;
   var sm={vacant:'Slobodna',occupied:'Zauzeta',request:'Zahtev',urgent:'HITNO'};
   var h='<div class="rv-t">Soba '+num+'</div><div class="rv-tp">'+ud.type.toUpperCase()+' &middot; '+ud.fid+'. SPRAT</div>';
   h+='<div class="rv-r"><span class="rv-rl">Status</span><span class="rv-rv">'+(sm[rs.state]||rs.state)+'</span></div>';
@@ -448,7 +449,7 @@ function buildRoomScene(type,rs){
   cyl(0.007,0.007,0.08,goldM,rW/2-0.54,0.95,rD/2-0.35);
 
   // Desk + Chair
-  var dx=rW/2-0.65;
+  var dx=rW<6?rW/2-0.55:rW/2-0.65;
   b(0.9,0.04,0.4,woodM,dx,0.7,0);
   b(0.025,0.65,0.025,metM,dx-0.4,0.34,0.16);
   b(0.025,0.65,0.025,metM,dx+0.4,0.34,0.16);
@@ -458,7 +459,7 @@ function buildRoomScene(type,rs){
   b(0.38,0.38,0.03,fabM,dx,0.63,-0.53);
 
   // Bathroom - proper room with walls and door opening
-  var bW=1.8;var bD=1.6;var bx=-rW/2+bW/2+0.15;var bz=rD/2-bD/2-0.15;
+  var bW=rW<6?1.3:1.8;var bD=rW<6?1.2:1.6;var bx=-rW/2+bW/2+0.12;var bz=rD/2-bD/2-0.12;
   var tileM=new THREE.MeshStandardMaterial({color:0xc8c0b8,roughness:0.15});
   b(bW,0.09,bD,tileM,bx,0.045,bz);
   b(0.06,rH,bD*0.35,wallM,bx+bW/2,rH/2,bz+bD*0.33);
@@ -482,25 +483,25 @@ function buildRoomScene(type,rs){
   // === BEDS ===
   if(t.indexOf('twin')>=0){
     // Two single beds
-    b(1.2,0.28,1.7,woodM,-rW/4-0.4,0.14,-0.2);
-    b(1.0,0.16,1.5,fabM,-rW/4-0.4,0.35,-0.2);
-    b(0.35,0.07,0.25,whiteM,-rW/4-0.4,0.46,-0.85);
-    b(1.2,0.75,0.05,woodM,-rW/4-0.4,0.65,-1);
-    b(1.2,0.28,1.7,woodM,-rW/4+0.9,0.14,-0.2);
-    b(1.0,0.16,1.5,fabM,-rW/4+0.9,0.35,-0.2);
-    b(0.35,0.07,0.25,whiteM,-rW/4+0.9,0.46,-0.85);
-    b(1.2,0.75,0.05,woodM,-rW/4+0.9,0.65,-1);
-    b(0.25,0.38,0.25,woodM,-rW/4+0.25,0.19,-0.6);
-    pointL(0xFFDD88,0.2,2,-rW/4+0.25,0.45,-0.6);
+    b(1.05,0.28,1.6,woodM,0,0.14,-0.3);
+    b(0.85,0.16,1.4,fabM,0,0.35,-0.3);
+    b(0.3,0.07,0.24,whiteM,0,0.46,-0.85);
+    b(1.05,0.7,0.05,woodM,0,0.63,-1.02);
+    b(1.05,0.28,1.6,woodM,1.25,0.14,-0.3);
+    b(0.85,0.16,1.4,fabM,1.25,0.35,-0.3);
+    b(0.3,0.07,0.24,whiteM,1.25,0.46,-0.85);
+    b(1.05,0.7,0.05,woodM,1.25,0.63,-1.02);
+    b(0.22,0.38,0.22,woodM,0.62,0.19,-0.65);
+    pointL(0xFFDD88,0.2,2,0.62,0.45,-0.65);
   }else if(t.indexOf('economy')>=0){
-    // Single bed
-    b(1.4,0.28,1.9,woodM,-rW/4,0.14,-0.05);
-    b(1.2,0.16,1.7,fabM,-rW/4,0.35,-0.05);
-    b(0.4,0.07,0.28,whiteM,-rW/4,0.46,-0.75);
-    b(1.4,0.7,0.05,woodM,-rW/4,0.63,-0.92);
-    b(1.42,0.03,0.06,goldM,-rW/4,0.98,-0.92);
-    b(0.35,0.38,0.28,woodM,-rW/4+0.95,0.19,-0.5);
-    pointL(0xFFDD88,0.2,2,-rW/4+0.95,0.45,-0.5);
+    // Single bed - right side away from bathroom
+    b(1.3,0.28,1.8,woodM,0.4,0.14,-0.3);
+    b(1.1,0.16,1.6,fabM,0.4,0.35,-0.3);
+    b(0.38,0.07,0.26,whiteM,0.4,0.46,-0.95);
+    b(1.3,0.7,0.05,woodM,0.4,0.63,-1.12);
+    b(1.32,0.03,0.06,goldM,0.4,0.98,-1.12);
+    b(0.32,0.38,0.26,woodM,1.2,0.19,-0.7);
+    pointL(0xFFDD88,0.2,2,1.2,0.45,-0.7);
   }else{
     // King bed
     var bw=t.indexOf('royal')>=0||t.indexOf('presidential')>=0?2.4:2.0;
@@ -563,8 +564,8 @@ function snd(){
   hist.push({role:'user',content:txt});
   var ty=document.createElement('div');ty.className='msg ai';ty.innerHTML='<div style="display:flex;gap:4px;padding:8px"><i style="width:5px;height:5px;border-radius:50%;background:var(--au);animation:tp .7s infinite"></i><i style="width:5px;height:5px;border-radius:50%;background:var(--au);animation:tp .7s .12s infinite"></i><i style="width:5px;height:5px;border-radius:50%;background:var(--au);animation:tp .7s .24s infinite"></i></div>';
   document.getElementById('ch').appendChild(ty);scrl();
-  fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:getSys(),messages:hist.slice(-10)})}).then(function(r){return r.json()}).then(function(d){
-    var ai=d.content?d.content.map(function(c){return c.text||''}).join(''):'Greska.';
+  fetch('https://nolimitnikola.app.n8n.cloud/webhook/dt-chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:txt,system:getSys()})}).then(function(r){return r.json()}).then(function(d){
+    var ai=d.reply||'Greska.';
     hist.push({role:'assistant',content:ai});ty.remove();addM(ai,'ai');
   }).catch(function(){ty.remove();addM('Greska u komunikaciji.','ai')});
 }
