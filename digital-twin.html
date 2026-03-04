@@ -4,11 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>THE FOURTH SHIFT — Digital Twin</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant:wght@300;400;500;600;700&family=Syne:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" as="script">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-:root{--bg:#06070B;--s1:#0B0D13;--s2:#10121A;--bd:rgba(255,255,255,.04);--bd2:rgba(255,255,255,.07);--w9:rgba(255,255,255,.9);--w7:rgba(255,255,255,.7);--w5:rgba(255,255,255,.5);--w3:rgba(255,255,255,.3);--w2:rgba(255,255,255,.15);--w1:rgba(255,255,255,.06);--au:#C4A45A;--au2:#A8903E;--auf:rgba(196,164,90,.06);--aug:rgba(196,164,90,.12);--grn:#4ADE80;--red:#F87171;--sky:#60A5FA;--ff:'Syne',system-ui,sans-serif;--fh:'Cormorant',Georgia,serif;--fm:'IBM Plex Mono',monospace}
+:root{--bg:#06070B;--s1:#0B0D13;--s2:#10121A;--bd:rgba(255,255,255,.04);--bd2:rgba(255,255,255,.07);--w9:rgba(255,255,255,.9);--w7:rgba(255,255,255,.7);--w5:rgba(255,255,255,.5);--w3:rgba(255,255,255,.3);--w2:rgba(255,255,255,.15);--w1:rgba(255,255,255,.06);--au:#C4A45A;--au2:#A8903E;--auf:rgba(196,164,90,.06);--aug:rgba(196,164,90,.12);--grn:#4ADE80;--red:#F87171;--sky:#60A5FA;--ff:'Syne',system-ui,sans-serif;--fh:'Syne',Georgia,serif;--fm:'IBM Plex Mono',monospace}
 html,body{height:100%;overflow:hidden}
 body{background:var(--bg);color:var(--w7);font-family:var(--ff)}
 .app{display:grid;grid-template-columns:1fr 380px;grid-template-rows:50px 1fr;height:100vh}
@@ -110,7 +113,7 @@ var D=null,RM={},scene,cam,ren,ray,m2,bldg,FG={};
 var tRY=-.3,tRX=.3,cRY=-.3,cRX=.3,tZ=44,cZ=44;
 var drag=false,pv={x:0,y:0},hov=null;
 var rScene=null,rCam=null,rRen=null,inRoom=false;
-var rAY=0,rAX=0.35,rDrg=false,rPv={x:0,y:0},rZm=3;
+var rAY=0,rAX=0.35,rDrg=false,rPv={x:0,y:0},rZm=3,curRW=7,curRD=5;
 
 function load(){
   fetch(API).then(function(r){return r.json()}).then(function(d){D=d;updUI();updB();updIns()}).catch(function(){
@@ -259,9 +262,11 @@ function anim(){
   if(inRoom){
     if(rRen&&rScene&&rCam){
       if(!rDrg)rAY+=0.002;
-      rCam.position.x=Math.sin(rAY)*Math.cos(rAX)*rZm;
-      rCam.position.y=1.0+Math.sin(rAX)*rZm;
-      rCam.position.z=Math.cos(rAY)*Math.cos(rAX)*rZm;
+      var maxR=Math.min(curRW,curRD)*0.42;
+      var cr=Math.min(rZm,maxR);
+      rCam.position.x=Math.sin(rAY)*Math.cos(rAX)*cr;
+      rCam.position.y=1.2+Math.sin(rAX)*cr*0.6;
+      rCam.position.z=Math.cos(rAY)*Math.cos(rAX)*cr;
       rCam.lookAt(0,1.2,0);
       if(rScene.userData.problems){
         var p=0.5+Math.sin(Date.now()*0.004)*0.5;
@@ -296,11 +301,11 @@ function openRoom(num){
   rvE.onmousedown=function(e){rDrg=true;rPv={x:e.clientX,y:e.clientY}};
   rvE.onmouseup=function(){rDrg=false};
   rvE.onmouseleave=function(){rDrg=false};
-  rvE.onmousemove=function(e){if(!rDrg)return;rAY+=(e.clientX-rPv.x)*0.005;rAX=Math.max(0.05,Math.min(1.2,rAX+(e.clientY-rPv.y)*0.005));rPv={x:e.clientX,y:e.clientY}};
-  rvE.onwheel=function(e){e.preventDefault();rZm=Math.max(2,Math.min(9,rZm+e.deltaY*0.005))};
+  rvE.onmousemove=function(e){if(!rDrg)return;rAY+=(e.clientX-rPv.x)*0.005;rAX=Math.max(0.1,Math.min(0.7,rAX+(e.clientY-rPv.y)*0.005));rPv={x:e.clientX,y:e.clientY}};
+  rvE.onwheel=function(e){e.preventDefault();rZm=Math.max(1.5,Math.min(Math.min(curRW,curRD)*0.42,rZm+e.deltaY*0.005))};
   var rs=(D&&D.roomState&&D.roomState[num])||{state:'vacant',guest:'',source:'',checkOut:'',issue:''};
   var ud=RM[num]?RM[num].userData:{type:'Standard',fid:1};
-  var ut2=ud.type.toLowerCase();rZm=(ut2.indexOf('royal')>=0||ut2.indexOf('presidential')>=0)?7:(ut2.indexOf('premium')>=0||ut2.indexOf('jr')>=0||ut2.indexOf('superior')>=0)?6:(ut2.indexOf('king')>=0||ut2.indexOf('twin')>=0)?5:4.5;
+  var ut2=ud.type.toLowerCase();if(ut2.indexOf('royal')>=0||ut2.indexOf('presidential')>=0){curRW=12;curRD=9}else if(ut2.indexOf('premium')>=0||ut2.indexOf('jr')>=0){curRW=10;curRD=8}else if(ut2.indexOf('superior')>=0){curRW=9;curRD=7}else if(ut2.indexOf('king')>=0||ut2.indexOf('twin')>=0){curRW=8;curRD=6}else{curRW=7;curRD=5.5}rZm=Math.min(curRW,curRD)*0.55;
   var sm={vacant:'Slobodna',occupied:'Zauzeta',request:'Zahtev',urgent:'HITNO'};
   var h='<div class="rv-t">Soba '+num+'</div><div class="rv-tp">'+ud.type.toUpperCase()+' &middot; '+ud.fid+'. SPRAT</div>';
   h+='<div class="rv-r"><span class="rv-rl">Status</span><span class="rv-rv">'+(sm[rs.state]||rs.state)+'</span></div>';
