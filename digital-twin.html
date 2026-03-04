@@ -260,7 +260,7 @@ function anim(){
     if(rRen&&rScene&&rCam){
       if(!rDrg)rAY+=0.002;
       rCam.position.x=Math.sin(rAY)*Math.cos(rAX)*rZm;
-      rCam.position.y=0.8+Math.sin(rAX)*rZm;
+      rCam.position.y=1.0+Math.sin(rAX)*rZm;
       rCam.position.z=Math.cos(rAY)*Math.cos(rAX)*rZm;
       rCam.lookAt(0,1.2,0);
       if(rScene.userData.problems){
@@ -297,10 +297,10 @@ function openRoom(num){
   rvE.onmouseup=function(){rDrg=false};
   rvE.onmouseleave=function(){rDrg=false};
   rvE.onmousemove=function(e){if(!rDrg)return;rAY+=(e.clientX-rPv.x)*0.005;rAX=Math.max(0.05,Math.min(1.2,rAX+(e.clientY-rPv.y)*0.005));rPv={x:e.clientX,y:e.clientY}};
-  rvE.onwheel=function(e){e.preventDefault();rZm=Math.max(1.5,Math.min(5,rZm+e.deltaY*0.003))};
+  rvE.onwheel=function(e){e.preventDefault();rZm=Math.max(2,Math.min(9,rZm+e.deltaY*0.005))};
   var rs=(D&&D.roomState&&D.roomState[num])||{state:'vacant',guest:'',source:'',checkOut:'',issue:''};
   var ud=RM[num]?RM[num].userData:{type:'Standard',fid:1};
-  var ut2=ud.type.toLowerCase();rZm=(ut2.indexOf("royal")>=0||ut2.indexOf("presidential")>=0)?5.5:(ut2.indexOf("premium")>=0||ut2.indexOf("jr")>=0||ut2.indexOf("superior")>=0)?4.5:(ut2.indexOf("king")>=0)?4:3.8;
+  var ut2=ud.type.toLowerCase();rZm=(ut2.indexOf('royal')>=0||ut2.indexOf('presidential')>=0)?7:(ut2.indexOf('premium')>=0||ut2.indexOf('jr')>=0||ut2.indexOf('superior')>=0)?6:(ut2.indexOf('king')>=0||ut2.indexOf('twin')>=0)?5:4.5;
   var sm={vacant:'Slobodna',occupied:'Zauzeta',request:'Zahtev',urgent:'HITNO'};
   var h='<div class="rv-t">Soba '+num+'</div><div class="rv-tp">'+ud.type.toUpperCase()+' &middot; '+ud.fid+'. SPRAT</div>';
   h+='<div class="rv-r"><span class="rv-rl">Status</span><span class="rv-rv">'+(sm[rs.state]||rs.state)+'</span></div>';
@@ -402,11 +402,11 @@ function buildRoomScene(type,rs){
   // Room size by type
   var t=type.toLowerCase();
   var rW,rD,rH=3.5;
-  if(t.indexOf('royal')>=0||t.indexOf('presidential')>=0){rW=9;rD=7}
-  else if(t.indexOf('premium')>=0||t.indexOf('jr')>=0||t.indexOf('junior')>=0){rW=8;rD=6}
-  else if(t.indexOf('superior')>=0){rW=7;rD=5.5}
-  else if(t.indexOf('king')>=0||t.indexOf('twin')>=0){rW=6;rD=4.5}
-  else{rW=5;rD=4}
+  if(t.indexOf('royal')>=0||t.indexOf('presidential')>=0){rW=12;rD=9}
+  else if(t.indexOf('premium')>=0||t.indexOf('jr')>=0||t.indexOf('junior')>=0){rW=10;rD=8}
+  else if(t.indexOf('superior')>=0){rW=9;rD=7}
+  else if(t.indexOf('king')>=0||t.indexOf('twin')>=0){rW=8;rD=6}
+  else{rW=7;rD=5.5}
 
   // SHELL
   b(rW,0.08,rD,floorM,0,0,0);
@@ -459,7 +459,7 @@ function buildRoomScene(type,rs){
   b(0.38,0.38,0.03,fabM,dx,0.63,-0.53);
 
   // Bathroom - proper room with walls and door opening
-  var bW=rW<6?1.3:1.8;var bD=rW<6?1.2:1.6;var bx=-rW/2+bW/2+0.12;var bz=rD/2-bD/2-0.12;
+  var bW=rW<8?1.6:2.2;var bD=rW<8?1.4:1.8;var bx=-rW/2+bW/2+0.12;var bz=rD/2-bD/2-0.12;
   var tileM=new THREE.MeshStandardMaterial({color:0xc8c0b8,roughness:0.15});
   b(bW,0.09,bD,tileM,bx,0.045,bz);
   b(0.06,rH,bD*0.35,wallM,bx+bW/2,rH/2,bz+bD*0.33);
@@ -556,7 +556,33 @@ function getSys(){
   var s=D?D.stats:{};var gs=D?D.aktivneSobe||[]:[];var rv=0;
   for(var i=0;i<gs.length;i++)rv+=parseFloat(String(gs[i].Cena||'0').replace(/[^\d.]/g,''))||0;
   var iss=[];if(D&&D.roomState)for(var n in D.roomState)if(D.roomState[n].issue)iss.push('Soba '+n+': '+D.roomState[n].issue);
-  return 'Ti si Digital Twin AI za Hotel Moskva, Beograd. Srpski. Precizan.\n\nPODACI: Soba: '+(s.total||35)+' | Zauzete: '+(s.occupied||0)+' | Prihod: EUR '+rv+'\n\nPROBLEMI:\n'+(iss.join('\n')||'Nema');
+  // Build guest list for analysis
+  var gList='';for(var gi=0;gi<gs.length;gi++){var g=gs[gi];gList+='- Soba '+g.Soba+': '+g.Gost+', '+g.Cena+', '+(g.Izvor||'N/A')+', check-out: '+(g.CheckOut||'N/A')+'\n';}
+  var occ=s.total?Math.round((s.occupied||0)/s.total*100):0;
+  var bkCount=0;var anCount=0;for(var ci=0;ci<gs.length;ci++){if(gs[ci].Izvor==='Booking.com')bkCount++;else anCount++;}
+  // Room state summary
+  var rsList='';if(D&&D.roomState){for(var rk in D.roomState){var rs2=D.roomState[rk];if(rs2.state!=='vacant')rsList+='Soba '+rk+': '+rs2.state+', Gost: '+rs2.guest+', Izvor: '+rs2.source+', Check-out: '+rs2.checkOut+(rs2.issue?', PROBLEM: '+rs2.issue:'')+'\n';}}
+
+  return 'Ti si Digital Twin AI asistent za Hotel Moskva, Beograd (4 zvezdice, osnovan 1908). Odgovaraj na srpskom. Budi precizan, konkretan, koristeci brojke i podatke. Daji analize, preporuke i prognoze kad je relevantno.\n\n'
+  +'== STATISTIKA ==\n'
+  +'Ukupno soba: '+(s.total||35)+'\n'
+  +'Zauzeto: '+(s.occupied||0)+' ('+occ+'%)\n'
+  +'Slobodne: '+(s.vacant||0)+'\n'
+  +'Aktivni zahtevi: '+(s.request||0)+'\n'
+  +'Hitni problemi: '+(s.urgent||0)+'\n'
+  +'Booking.com gosti: '+bkCount+'\n'
+  +'Ana AI gosti: '+anCount+'\n'
+  +'Ukupan dnevni prihod: EUR '+rv+'\n\n'
+  +'== AKTIVNI GOSTI ==\n'
+  +(gList||'Nema aktivnih gostiju\n')+'\n'
+  +'== STANJE SOBA ==\n'
+  +(rsList||'Sve sobe slobodne\n')+'\n'
+  +'== PROBLEMI ==\n'
+  +(iss.join('\n')||'Nema aktivnih problema')+'\n\n'
+  +'== MOGUCNOSTI ANALIZE ==\n'
+  +'Mozes da analiziras: popunjenost (trend, prognoza), prihod (prosek po sobi, ukupno), izvore rezervacija (Booking vs Ana AI procenat), probleme (prioritet, vreme resavanja), check-out raspored (ko odlazi danas/sutra), cenovnu strategiju (elasticnost ~0.3, predlozi za dynamic pricing), RevPAR, ADR metrike.\n'
+  +'Kad korisnik pita o cenama, koristi elasticnost 0.3 - za svakih 10% promene cene, potraznja se menja ~3%.\n'
+  +'Uvek daj konkretne brojeve, procente, i preporuke. Formatiraj odgovore pregledno sa boldovanim kljucnim brojevima.';
 }
 function snd(){
   var inp=document.getElementById('chI');var txt=inp.value.trim();if(!txt)return;inp.value='';
