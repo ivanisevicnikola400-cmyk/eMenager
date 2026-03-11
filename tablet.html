@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>Hotel Moskva — eMenadžer Tablet</title>
+<title>Orbis Design Hotel & Spa — eMenadžer Tablet</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{--bg:#0B0E14;--sf:#12161F;--bd:#1C2130;--tx:#E8E8E8;--dim:#7B8294;--gld:#C9A84C;--grn:#22C55E;--red:#EF4444;--yel:#EAB308;--blu:#3B82F6}
@@ -23,7 +23,7 @@ body{background:var(--bg);color:var(--tx);font-family:'Segoe UI',system-ui,sans-
 .cat-icon{font-size:36px;margin-bottom:8px}
 .cat-name{font-size:13px;font-weight:600;color:#FFF;margin-bottom:2px}
 .cat-desc{font-size:10px;color:var(--dim);line-height:1.4}
-.cat.urg{border-color:rgba(239,68,68,.3)}.cat.rs{border-color:rgba(234,179,8,.3)}.cat.hs{border-color:rgba(34,197,94,.3)}.cat.inf{border-color:rgba(59,130,246,.3)}
+.cat.urg{border-color:rgba(239,68,68,.3)}.cat.rs{border-color:rgba(234,179,8,.3)}.cat.hs{border-color:rgba(34,197,94,.3)}.cat.inf{border-color:rgba(59,130,246,.3)}.cat.spa{border-color:rgba(168,85,247,.3)}
 .sub-panel{display:none;padding:0 0 20px}.sub-panel.show{display:block}
 .back-btn{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--gld);cursor:pointer;margin-bottom:16px;padding:8px 0}
 .sub-title{font-size:16px;font-weight:700;color:#FFF;margin-bottom:4px}
@@ -85,7 +85,7 @@ body{background:var(--bg);color:var(--tx);font-family:'Segoe UI',system-ui,sans-
     <input type="password" class="admin-field" id="adminPass" placeholder="Admin šifra" autocomplete="off">
     <select class="admin-select" id="adminFloor" onchange="updateRoomList()">
       <option value="">— Izaberite sprat —</option>
-      <option value="1">1. sprat — Prizemlje</option>
+      <option value="1">1. sprat</option>
       <option value="2">2. sprat</option>
       <option value="3">3. sprat</option>
       <option value="4">4. sprat</option>
@@ -101,8 +101,8 @@ body{background:var(--bg);color:var(--tx);font-family:'Segoe UI',system-ui,sans-
 <!-- MAIN TABLET INTERFACE -->
 <div class="head">
   <div class="orn">✦ ✦ ✦ ✦</div>
-  <div class="htl" id="logoArea">HOTEL MOSKVA</div>
-  <div class="hsub">Beograd · od 1908. godine</div>
+  <div class="htl" id="logoArea">ORBIS HOTEL & SPA</div>
+  <div class="hsub">Paraćin · Design Hotel</div>
   <div class="rmid" id="roomDisplay">SOBA ---</div>
 </div>
 <div class="content">
@@ -113,7 +113,9 @@ body{background:var(--bg);color:var(--tx);font-family:'Segoe UI',system-ui,sans-
       <div class="cat urg" onclick="showSub('urgent')"><div class="cat-icon">🚨</div><div class="cat-name">Hitni problem</div><div class="cat-desc">Klima, TV, voda, grejanje</div></div>
       <div class="cat rs" onclick="showSub('service')"><div class="cat-icon">🍽️</div><div class="cat-name">Room Service</div><div class="cat-desc">Hrana, piće, narudžbe</div></div>
       <div class="cat hs" onclick="showSub('housekeeping')"><div class="cat-icon">🛏️</div><div class="cat-name">Housekeeping</div><div class="cat-desc">Peškiri, čaršavi, čišćenje</div></div>
+      <div class="cat spa" onclick="showSub('spa')"><div class="cat-icon">🧖‍♀️</div><div class="cat-name">Spa & Wellness</div><div class="cat-desc">Bazen, sauna, masaže</div></div>
       <div class="cat inf" onclick="showSub('info')"><div class="cat-icon">ℹ️</div><div class="cat-name">Informacije</div><div class="cat-desc">WiFi, checkout, parking</div></div>
+      <div class="cat" style="border-color:rgba(201,168,76,.3)" onclick="showSub('explore')"><div class="cat-icon">🏛️</div><div class="cat-name">Istraži okolinu</div><div class="cat-desc">Manastiri, izleti, restorani</div></div>
     </div>
     <div class="section-t" style="margin-top:24px">Ili pošaljite slobodnu poruku</div>
     <div><textarea class="custom-ta" id="customMsg" placeholder="Napišite šta Vam treba..."></textarea><button class="send-btn req" onclick="sendCustom()">POŠALJI PORUKU</button></div>
@@ -128,6 +130,7 @@ body{background:var(--bg);color:var(--tx);font-family:'Segoe UI',system-ui,sans-
     <div class="opt" onclick="sendReq('urgent','Grejanje ne radi')"><div class="opt-icon">🔥</div><div class="opt-text">Grejanje ne radi</div><div class="opt-arrow">›</div></div>
     <div class="opt" onclick="sendReq('urgent','Nema struje')"><div class="opt-icon">⚡</div><div class="opt-text">Nema struje</div><div class="opt-arrow">›</div></div>
     <div class="opt" onclick="sendReq('urgent','Problem sa bravom')"><div class="opt-icon">🔐</div><div class="opt-text">Problem sa bravom</div><div class="opt-arrow">›</div></div>
+    <div class="opt" onclick="sendReq('urgent','WiFi ne radi')"><div class="opt-icon">📶</div><div class="opt-text">WiFi ne radi</div><div class="opt-arrow">›</div></div>
     <div style="margin-top:12px"><textarea class="custom-ta" id="urgMsg" placeholder="Opišite detaljnije (opciono)..." style="height:70px"></textarea><button class="send-btn urg" onclick="sendUrgCustom()">⚠ POŠALJI HITAN ZAHTEV</button></div>
   </div>
 
@@ -137,10 +140,11 @@ body{background:var(--bg);color:var(--tx);font-family:'Segoe UI',system-ui,sans-
     <div class="opt" onclick="sendReq('request','Doručak u sobu')"><div class="opt-icon">🥐</div><div class="opt-text">Doručak u sobu</div><div class="opt-arrow">›</div></div>
     <div class="opt" onclick="sendReq('request','Kafa / Čaj')"><div class="opt-icon">☕</div><div class="opt-text">Kafa / Čaj</div><div class="opt-arrow">›</div></div>
     <div class="opt" onclick="sendReq('request','Voće u sobu')"><div class="opt-icon">🍇</div><div class="opt-text">Voće u sobu</div><div class="opt-arrow">›</div></div>
-    <div class="opt" onclick="sendReq('request','Moskva šnit')"><div class="opt-icon">🍰</div><div class="opt-text">Moskva šnit</div><div class="opt-arrow">›</div></div>
+    <div class="opt" onclick="sendReq('request','Pasta / Italijanski specijaliteti')"><div class="opt-icon">🍝</div><div class="opt-text">Pasta / Italijanski specijaliteti</div><div class="opt-arrow">›</div></div>
     <div class="opt" onclick="sendReq('request','Voda / Sokovi')"><div class="opt-icon">🥤</div><div class="opt-text">Voda / Sokovi</div><div class="opt-arrow">›</div></div>
     <div class="opt" onclick="sendReq('request','Vino / Šampanjac')"><div class="opt-icon">🍷</div><div class="opt-text">Vino / Šampanjac</div><div class="opt-arrow">›</div></div>
-    <div style="margin-top:12px"><textarea class="custom-ta" id="svcMsg" placeholder="Posebne želje..." style="height:70px"></textarea><button class="send-btn req" onclick="sendSvcCustom()">PORUČI</button></div>
+    <div class="opt" onclick="sendReq('request','Morski plodovi / Seafood')"><div class="opt-icon">🦐</div><div class="opt-text">Morski plodovi / Seafood</div><div class="opt-arrow">›</div></div>
+    <div style="margin-top:12px"><textarea class="custom-ta" id="svcMsg" placeholder="Posebne želje, alergije, dijetetske potrebe..." style="height:70px"></textarea><button class="send-btn req" onclick="sendSvcCustom()">PORUČI</button></div>
   </div>
 
   <div class="sub-panel" id="sub-housekeeping">
@@ -154,17 +158,41 @@ body{background:var(--bg);color:var(--tx);font-family:'Segoe UI',system-ui,sans-
     <div class="opt" onclick="sendReq('request','Toaletne potrepštine')"><div class="opt-icon">🧴</div><div class="opt-text">Toaletne potrepštine</div><div class="opt-arrow">›</div></div>
   </div>
 
+  <div class="sub-panel" id="sub-spa">
+    <div class="back-btn" onclick="goBack()">← Nazad</div>
+    <div class="sub-title">🧖‍♀️ Spa & Wellness</div><div class="sub-desc">Opustite se u našem wellness centru.</div>
+    <div class="opt" style="cursor:default"><div class="opt-icon">🏊</div><div class="opt-text"><strong>Zatvoreni bazen</strong><br><span style="font-size:11px;color:var(--dim)">Dostupan za sve goste</span></div></div>
+    <div class="opt" style="cursor:default"><div class="opt-icon">🧖</div><div class="opt-text"><strong>Tursko kupatilo / Hamam</strong><br><span style="font-size:11px;color:var(--dim)">Parno kupatilo za detoksikaciju</span></div></div>
+    <div class="opt" style="cursor:default"><div class="opt-icon">💆</div><div class="opt-text"><strong>Đakuzi</strong><br><span style="font-size:11px;color:var(--dim)">Vodeni i vazdušni mlazevi</span></div></div>
+    <div class="opt" style="cursor:default"><div class="opt-icon">🔥</div><div class="opt-text"><strong>Finska sauna</strong><br><span style="font-size:11px;color:var(--dim)">Suva sauna za relaksaciju</span></div></div>
+    <div class="opt" style="cursor:default"><div class="opt-icon">💪</div><div class="opt-text"><strong>Fitnes centar</strong><br><span style="font-size:11px;color:var(--dim)">Moderna oprema, dostupan 24/7</span></div></div>
+    <div class="opt" onclick="sendReq('request','Zakazivanje masaže — molim kontakt')"><div class="opt-icon">💆‍♂️</div><div class="opt-text" style="color:var(--gld)">Zakaži masažu</div><div class="opt-arrow">›</div></div>
+    <div class="opt" onclick="sendReq('request','Rezervacija privatnog termina u Spa centru')"><div class="opt-icon">🕐</div><div class="opt-text" style="color:var(--gld)">Rezerviši privatni termin</div><div class="opt-arrow">›</div></div>
+  </div>
+
   <div class="sub-panel" id="sub-info">
     <div class="back-btn" onclick="goBack()">← Nazad</div>
     <div class="sub-title">ℹ️ Informacije</div><div class="sub-desc">Korisne informacije o hotelu.</div>
-    <div class="opt" style="cursor:default"><div class="opt-icon">📶</div><div class="opt-text"><strong>WiFi:</strong> HotelMoskva_Guest<br><span style="font-size:11px;color:var(--dim)">Lozinka: Moskva1908!</span></div></div>
+    <div class="opt" style="cursor:default"><div class="opt-icon">📶</div><div class="opt-text"><strong>WiFi:</strong> OrbisHotel_Guest<br><span style="font-size:11px;color:var(--dim)">Lozinka: Orbis2024!</span></div></div>
     <div class="opt" style="cursor:default"><div class="opt-icon">🕐</div><div class="opt-text"><strong>Check-out:</strong> do 12:00<br><span style="font-size:11px;color:var(--dim)">Kasni check-out na upit</span></div></div>
-    <div class="opt" style="cursor:default"><div class="opt-icon">🅿️</div><div class="opt-text"><strong>Parking:</strong> 20 EUR/dan<br><span style="font-size:11px;color:var(--dim)">Hotelska garaža, -1 nivo</span></div></div>
-    <div class="opt" style="cursor:default"><div class="opt-icon">🧖‍♀️</div><div class="opt-text"><strong>EVA Spa:</strong> Besplatno<br><span style="font-size:11px;color:var(--dim)">07:00-22:00 · sauna, đakuzi</span></div></div>
-    <div class="opt" style="cursor:default"><div class="opt-icon">🍰</div><div class="opt-text"><strong>Poslastičarnica:</strong> Moskva šnit<br><span style="font-size:11px;color:var(--dim)">Prizemlje · 07:00-23:00</span></div></div>
-    <div class="opt" style="cursor:default"><div class="opt-icon">📞</div><div class="opt-text"><strong>Recepcija:</strong> +381 11 268 6255<br><span style="font-size:11px;color:var(--dim)">24/7</span></div></div>
+    <div class="opt" style="cursor:default"><div class="opt-icon">🅿️</div><div class="opt-text"><strong>Parking:</strong> 10 EUR/dan<br><span style="font-size:11px;color:var(--dim)">Privatni parking i garaža</span></div></div>
+    <div class="opt" style="cursor:default"><div class="opt-icon">🧖‍♀️</div><div class="opt-text"><strong>Spa & Wellness:</strong> Bazen, sauna, đakuzi<br><span style="font-size:11px;color:var(--dim)">Deluxe sobe — besplatan pristup</span></div></div>
+    <div class="opt" style="cursor:default"><div class="opt-icon">🍽️</div><div class="opt-text"><strong>Restoran:</strong> 08:00 — 00:00<br><span style="font-size:11px;color:var(--dim)">Pet-Sub do 01:00 · Internacionalna kuhinja</span></div></div>
+    <div class="opt" style="cursor:default"><div class="opt-icon">🍸</div><div class="opt-text"><strong>Sky Bar:</strong> Koktel bar na krovu<br><span style="font-size:11px;color:var(--dim)">Panoramski pogled na reku i grad</span></div></div>
+    <div class="opt" style="cursor:default"><div class="opt-icon">📞</div><div class="opt-text"><strong>Recepcija:</strong> +381 35 573 444<br><span style="font-size:11px;color:var(--dim)">24/7</span></div></div>
     <div class="opt" onclick="sendReq('request','Kasni check-out — molim potvrdu')"><div class="opt-icon">🕑</div><div class="opt-text" style="color:var(--gld)">Zatraži kasni check-out</div><div class="opt-arrow">›</div></div>
     <div class="opt" onclick="sendReq('request','Transfer do aerodroma')"><div class="opt-icon">✈️</div><div class="opt-text" style="color:var(--gld)">Zakaži transfer</div><div class="opt-arrow">›</div></div>
+  </div>
+
+  <div class="sub-panel" id="sub-explore">
+    <div class="back-btn" onclick="goBack()">← Nazad</div>
+    <div class="sub-title">🏛️ Istraži okolinu</div><div class="sub-desc">Preporuke za izlete i aktivnosti u blizini.</div>
+    <div class="opt" style="cursor:default"><div class="opt-icon">⛪</div><div class="opt-text"><strong>Manastir Manasija</strong><br><span style="font-size:11px;color:var(--dim)">Srednjovekovna tvrđava · ~30 min vožnje</span></div></div>
+    <div class="opt" style="cursor:default"><div class="opt-icon">⛪</div><div class="opt-text"><strong>Manastir Ravanica</strong><br><span style="font-size:11px;color:var(--dim)">Zadužbina kneza Lazara · ~25 min vožnje</span></div></div>
+    <div class="opt" style="cursor:default"><div class="opt-icon">🏔️</div><div class="opt-text"><strong>Manastir Lesje</strong><br><span style="font-size:11px;color:var(--dim)">Klisura reke Resave · ~1 km</span></div></div>
+    <div class="opt" style="cursor:default"><div class="opt-icon">🎭</div><div class="opt-text"><strong>Pozorište Paraćin</strong><br><span style="font-size:11px;color:var(--dim)">7 minuta peške od hotela</span></div></div>
+    <div class="opt" style="cursor:default"><div class="opt-icon">🌳</div><div class="opt-text"><strong>Gradski park</strong><br><span style="font-size:11px;color:var(--dim)">Pogled sa hotela · šetnja pored reke</span></div></div>
+    <div class="opt" onclick="sendReq('request','Organizacija izleta do manastira — molim info')"><div class="opt-icon">🚗</div><div class="opt-text" style="color:var(--gld)">Organizuj izlet do manastira</div><div class="opt-arrow">›</div></div>
   </div>
 
   <div class="success" id="successScreen">
@@ -179,31 +207,32 @@ body{background:var(--bg);color:var(--tx);font-family:'Segoe UI',system-ui,sans-
   <div class="qi"><div class="qi-v">14:00</div>CHECK-IN</div>
   <div class="qi"><div class="qi-v">12:00</div>CHECK-OUT</div>
   <div class="qi"><div class="qi-v">24/7</div>RECEPCIJA</div>
-  <div class="qi"><div class="qi-v">FREE</div>SPA & WiFi</div>
+  <div class="qi"><div class="qi-v">FREE</div>WiFi</div>
 </div>
 <div class="sending" id="sendingOverlay">⏳ Šaljem zahtev...</div>
 <div class="unlock-hint">držite logo 5 sekundi za admin pristup</div>
 
 <script>
 // ============================================
-// CONFIG
+// CONFIG — ORBIS DESIGN HOTEL & SPA
 // ============================================
 const API = 'https://nolimitnikola.app.n8n.cloud/webhook/em-tablet';
-const ADMIN_PASSWORD = 'Moskva1908!';
+const ADMIN_PASSWORD = 'Orbis2024!';
 const ROOMS = {
-  1: ['101','102','103','104','105','106','107','108','109','110'],
-  2: ['201','202','203','204','205','206','207','208','209','210'],
-  3: ['301','302','303','304','305','306','307','308','309','310'],
-  4: ['401','402','403','404','405']
+  1: ['101','102','103','104','105','106','107','108'],
+  2: ['201','202','203','204','205','206','207','208'],
+  3: ['301','302','303','304','305','306','307','308'],
+  4: ['401','402','403','404','405','406','407','408']
 };
 const ROOM_TYPES = {
-  '101':'Economy','102':'Std Twin','103':'Std King','104':'Economy','105':'Std King',
-  '106':'Superior','107':'Std King','108':'Economy','109':'Std Twin','110':'Economy',
-  '201':'Superior','202':'Std King','203':'Jr Suite','204':'Std Twin','205':'Superior',
-  '206':'Std King','207':'Superior','208':'Economy','209':'Std King','210':'Superior',
-  '301':'Premium','302':'Superior','303':'Std King','304':'Superior','305':'Std Twin',
-  '306':'Std King','307':'Jr Suite','308':'Superior','309':'Economy','310':'Std King',
-  '401':'Royal','402':'Premium','403':'Jr Suite','404':'Presidential','405':'Royal'
+  '101':'Superior Double','102':'Superior Double','103':'Deluxe Double','104':'Superior Queen',
+  '105':'Superior Double','106':'Deluxe Queen','107':'Superior Double','108':'Superior Queen',
+  '201':'Deluxe Double','202':'Superior Double','203':'Superior Queen','204':'Superior Double',
+  '205':'Deluxe Double','206':'Superior Double','207':'Deluxe Queen','208':'Superior Queen',
+  '301':'Deluxe Double','302':'Superior Double','303':'Superior Double','304':'Deluxe Queen',
+  '305':'Superior Queen','306':'Superior Double','307':'Deluxe Double','308':'Superior Queen',
+  '401':'Deluxe Double','402':'Superior Double','403':'Superior Double','404':'Deluxe Queen',
+  '405':'Superior Queen','406':'Deluxe Double','407':'Superior Double','408':'Superior Queen'
 };
 
 let ROOM = null;
@@ -342,7 +371,6 @@ function showSuccess(type, msg) {
     document.getElementById('successTitle').textContent = 'Zahtev primljen!';
     document.getElementById('successMsg').textContent = '"' + msg + '" — Prosečno vreme: 5 min. Hvala!';
   }
-  // Auto return after 30 seconds
   setTimeout(goHome, 30000);
 }
 
