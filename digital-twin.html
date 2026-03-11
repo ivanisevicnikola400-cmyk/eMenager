@@ -91,7 +91,7 @@ body{background:var(--bg);color:var(--w7);font-family:var(--ff)}
 </head>
 <body>
 <div class="app">
-<div class="hdr"><div class="hdr-l"><div class="logo-m">4S</div><span class="logo-t">THE FOURTH SHIFT</span><div class="hdr-d"></div><span class="hdr-h">Hotel <em>Moskva</em></span></div><div class="hdr-r"><div><div class="kv" id="hO">--%</div><div class="kl">POPUNJENOST</div></div><div class="hdr-d"></div><div><div class="kv au" id="hR">---</div><div class="kl">PRIHOD</div></div><div class="hdr-d"></div><div style="display:flex;align-items:center;gap:5px"><div class="ld"></div><span class="lt">LIVE</span></div></div></div>
+<div class="hdr"><div class="hdr-l"><div class="logo-m">4S</div><span class="logo-t">THE FOURTH SHIFT</span><div class="hdr-d"></div><span class="hdr-h"><em>Orbis</em> Design Hotel & Spa</span></div><div class="hdr-r"><div><div class="kv" id="hO">--%</div><div class="kl">POPUNJENOST</div></div><div class="hdr-d"></div><div><div class="kv au" id="hR">---</div><div class="kl">PRIHOD</div></div><div class="hdr-d"></div><div style="display:flex;align-items:center;gap:5px"><div class="ld"></div><span class="lt">LIVE</span></div></div></div>
 <div class="vp" id="vp">
   <div class="hud"><span class="ht tl">DIGITAL TWIN</span><span class="ht tr" id="fps"></span><span class="ht bl">DRAG · SCROLL · CLICK</span></div>
   <div class="fn" id="fn"><button class="fb on" onclick="sf('all',this)">SVI</button><button class="fb" onclick="sf(4,this)">4F</button><button class="fb" onclick="sf(3,this)">3F</button><button class="fb" onclick="sf(2,this)">2F</button><button class="fb" onclick="sf(1,this)">1F</button></div>
@@ -102,7 +102,7 @@ body{background:var(--bg);color:var(--w7);font-family:var(--ff)}
 <div class="pnl">
   <div class="ph"><div class="ao"><span>&#10022;</span></div><div><div class="an">DIGITAL TWIN AI</div><div class="as">Online</div></div></div>
   <div class="pt"><button class="ptb on" onclick="swP('c',this)">ASISTENT</button><button class="ptb" onclick="swP('i',this)">UVIDI</button></div>
-  <div class="chat" id="ch"><div class="msg ai"><div class="mb">Dobro dosli. Kliknite na sobu za <strong>3D pregled</strong>. Problemi su oznaceni crvenom.</div><div class="mt">AI</div></div></div>
+  <div class="chat" id="ch"><div class="msg ai"><div class="mb">Dobro dosli u <strong>Orbis Design Hotel & Spa</strong> Digital Twin. Kliknite na sobu za <strong>3D pregled</strong>. Problemi su oznaceni crvenom.</div><div class="mt">AI</div></div></div>
   <div class="ins" id="insP"></div>
   <div class="ci" id="ci"><div class="sgs" id="sgs"><span class="sg" onclick="aS(this)">Popunjenost?</span><span class="sg" onclick="aS(this)">Prihod?</span><span class="sg" onclick="aS(this)">Ko odlazi?</span><span class="sg" onclick="aS(this)">Cene +20%?</span></div><div class="ir"><input class="cin" id="chI" placeholder="Pitajte..." onkeydown="if(event.key==='Enter')snd()"><button class="csb" onclick="snd()">&#8594;</button></div></div>
 </div>
@@ -122,18 +122,28 @@ function load(){
 }
 function demo(){
   var rs={};
-  var rms='101,102,103,104,105,106,107,108,109,110,201,202,203,204,205,206,207,208,209,210,301,302,303,304,305,306,307,308,309,310,401,402,403,404,405'.split(',');
-  var nm=['Yuki Tanaka','Ana Markovic','Francois Dupont','John Smith','Nikola Jovic','Milica Djordjevic','Peter Mueller','Hans Weber','Alex Brown','Elena Rossi','Sarah Johnson','Marija Petrovic','Liam O Brien','Sofia Garcia'];
+  var rms='101,102,103,104,105,106,107,108,201,202,203,204,205,206,207,208,301,302,303,304,305,306,307,308,401,402,403,404,405,406,407,408'.split(',');
+  var roomTypes={
+    '101':'Superior Double','102':'Superior Double','103':'Deluxe Double','104':'Superior Queen',
+    '105':'Superior Double','106':'Deluxe Queen','107':'Superior Double','108':'Superior Queen',
+    '201':'Deluxe Double','202':'Superior Double','203':'Superior Queen','204':'Superior Double',
+    '205':'Deluxe Double','206':'Superior Double','207':'Deluxe Queen','208':'Superior Queen',
+    '301':'Deluxe Double','302':'Superior Double','303':'Superior Double','304':'Deluxe Queen',
+    '305':'Superior Queen','306':'Superior Double','307':'Deluxe Double','308':'Superior Queen',
+    '401':'Deluxe Double','402':'Superior Double','403':'Superior Double','404':'Deluxe Queen',
+    '405':'Superior Queen','406':'Deluxe Double','407':'Superior Double','408':'Superior Queen'
+  };
+  var nm=['Yuki Tanaka','Ana Markovic','Francois Dupont','John Smith','Marija Petrovic','Peter Mueller','Elena Rossi','Sarah Johnson'];
   var ni=0;
-  var iss={'101':'Klima ne radi','202':'Klima ne radi','203':'Curenje vode','308':'TV ne radi','105':'Mini bar prazan','304':'Sijalica pregorela','402':'Klima bucna'};
+  var iss={'101':'Klima ne radi','205':'Klima ne radi','308':'TV ne radi','402':'WiFi ne radi'};
   for(var i=0;i<rms.length;i++){
-    var r=rms[i];var o=Math.random()>.4;var h=iss[r]&&o;
-    rs[r]={state:h?(iss[r].indexOf('Curenje')>=0?'urgent':'request'):(o?'occupied':'vacant'),guest:o?nm[ni++%nm.length]:'',source:o?(Math.random()>.4?'Booking.com':'Ana AI'):'',checkOut:o?'2026-03-18':'',issue:h?iss[r]:''};
+    var r=rms[i];var o=Math.random()>.55;var h=iss[r]&&o;
+    rs[r]={state:h?(iss[r].indexOf('Curenje')>=0?'urgent':'request'):(o?'occupied':'vacant'),guest:o?nm[ni++%nm.length]:'',source:o?(Math.random()>.4?'Booking.com':'Ana AI'):'',checkOut:o?'2026-03-18':'',issue:h?iss[r]:'',type:roomTypes[r]||'Superior Double'};
   }
   var sv=[];for(var k in rs)sv.push(rs[k]);
   var vc=0,oc=0,rc=0,uc=0;
   for(var j=0;j<sv.length;j++){if(sv[j].state==='vacant')vc++;else oc++;if(sv[j].state==='request')rc++;if(sv[j].state==='urgent')uc++;}
-  return{roomState:rs,stats:{total:35,vacant:vc,occupied:oc,request:rc,urgent:uc,bookingGuests:8,anaGuests:6},aktivneSobe:nm.slice(0,14).map(function(n,i){return{Gost:n,Soba:rms[i],Cena:Math.floor(Math.random()*300+80)+' EUR',Izvor:Math.random()>.4?'Booking.com':'Ana AI',CheckIn:'2026-03-01',CheckOut:'2026-03-18'}})};
+  return{roomState:rs,stats:{total:32,vacant:vc,occupied:oc,request:rc,urgent:uc,bookingGuests:5,anaGuests:3},aktivneSobe:nm.slice(0,8).map(function(n,i){return{Gost:n,Soba:rms[i],Cena:Math.floor(Math.random()*150+70)+' EUR',Izvor:Math.random()>.4?'Booking.com':'Ana AI',CheckIn:'2026-03-01',CheckOut:'2026-03-18'}})};
 }
 function updUI(){
   if(!D)return;var s=D.stats;var rv=0;var gs=D.aktivneSobe||[];
@@ -171,43 +181,72 @@ function init(){
   anim();
 }
 function buildHotel(){
-  var fH=3.4,rW=2.2,rD=3.2,gap=0.12;
+  var fH=3.4,rW=2.4,rD=3.2,gap=0.12;
+  // Orbis: 4 sprata, 8 soba po spratu (2 reda po 4)
   var floors=[
-    {id:1,y:0,rooms:['101','102','103','104','105','106','107','108','109','110']},
-    {id:2,y:fH,rooms:['201','202','203','204','205','206','207','208','209','210']},
-    {id:3,y:fH*2,rooms:['301','302','303','304','305','306','307','308','309','310']},
-    {id:4,y:fH*3,rooms:['401','402','403','404','405']}
+    {id:1,y:0,rooms:['101','102','103','104','105','106','107','108']},
+    {id:2,y:fH,rooms:['201','202','203','204','205','206','207','208']},
+    {id:3,y:fH*2,rooms:['301','302','303','304','305','306','307','308']},
+    {id:4,y:fH*3,rooms:['401','402','403','404','405','406','407','408']}
   ];
-  var types={'01':'Economy','02':'Std Twin','03':'Std King','04':'Economy','05':'Std King','06':'Superior','07':'Std King','08':'Economy','09':'Std Twin','10':'Economy'};
-  var types4={'01':'Royal','02':'Premium','03':'Jr Suite','04':'Presidential','05':'Royal'};
+  var roomTypes={
+    '101':'Superior Double','102':'Superior Double','103':'Deluxe Double','104':'Superior Queen',
+    '105':'Superior Double','106':'Deluxe Queen','107':'Superior Double','108':'Superior Queen',
+    '201':'Deluxe Double','202':'Superior Double','203':'Superior Queen','204':'Superior Double',
+    '205':'Deluxe Double','206':'Superior Double','207':'Deluxe Queen','208':'Superior Queen',
+    '301':'Deluxe Double','302':'Superior Double','303':'Superior Double','304':'Deluxe Queen',
+    '305':'Superior Queen','306':'Superior Double','307':'Deluxe Double','308':'Superior Queen',
+    '401':'Deluxe Double','402':'Superior Double','403':'Superior Double','404':'Deluxe Queen',
+    '405':'Superior Queen','406':'Deluxe Double','407':'Superior Double','408':'Superior Queen'
+  };
+
   var goldMat=new THREE.MeshStandardMaterial({color:0xC4A45A,roughness:0.25,metalness:0.85,emissive:0xC4A45A,emissiveIntensity:0.05});
   var plateMat=new THREE.MeshStandardMaterial({color:0x12141c,roughness:0.6,metalness:0.3});
+  // Glass facade material for Orbis modern design
+  var glassMat=new THREE.MeshPhysicalMaterial({color:0x88aacc,roughness:0.05,metalness:0.3,transparent:true,opacity:0.15});
+
   for(var fi=0;fi<floors.length;fi++){
     var fc=floors[fi];var fg=new THREE.Group();fg.userData={fid:fc.id};
-    var pw=5*(rW+gap)+1.6;var pd=fc.rooms.length<=5?rD+2:rD*2+2.4;
+    var pw=4*(rW+gap)+1.2;var pd=rD*2+2.4;
+
+    // Floor plate - modern glass look
     var plate=new THREE.Mesh(new THREE.BoxGeometry(pw,0.2,pd),plateMat.clone());
     plate.position.set(0,fc.y-0.1,0);plate.receiveShadow=true;fg.add(plate);
-    var trim=new THREE.Mesh(new THREE.BoxGeometry(pw+0.05,0.03,pd+0.05),goldMat.clone());
+
+    // Modern trim (thinner, sleeker than Moskva)
+    var trim=new THREE.Mesh(new THREE.BoxGeometry(pw+0.05,0.02,pd+0.05),goldMat.clone());
     trim.position.set(0,fc.y+0.01,0);fg.add(trim);
-    var rows=fc.rooms.length<=5?1:2;
+
+    // Glass facade panels on front and back
+    var facadeF=new THREE.Mesh(new THREE.BoxGeometry(pw,fH*0.75,0.03),glassMat.clone());
+    facadeF.position.set(0,fc.y+fH*0.4,-pd/2);fg.add(facadeF);
+    var facadeB=new THREE.Mesh(new THREE.BoxGeometry(pw,fH*0.75,0.03),glassMat.clone());
+    facadeB.position.set(0,fc.y+fH*0.4,pd/2);fg.add(facadeB);
+
+    // 8 rooms: 2 rows of 4
     for(var ri=0;ri<fc.rooms.length;ri++){
-      var rn=fc.rooms[ri];var row=Math.floor(ri/5);var col=ri%5;
-      var x=(col-2)*(rW+gap);var z=rows===1?0:(row===0?-rD/2-0.3:rD/2+0.3);
+      var rn=fc.rooms[ri];var row=Math.floor(ri/4);var col=ri%4;
+      var x=(col-1.5)*(rW+gap);var z=row===0?-rD/2-0.3:rD/2+0.3;
+
       var rm=new THREE.Mesh(new THREE.BoxGeometry(rW,fH*0.7,rD),new THREE.MeshPhysicalMaterial({color:0x1a1e28,roughness:0.2,metalness:0.1,transparent:true,opacity:0.5}));
       rm.position.set(x,fc.y+fH*0.35+0.1,z);rm.castShadow=true;
-      rm.userData={rn:rn,type:fc.id===4?(types4[rn.slice(-2)]||'Suite'):(types[rn.slice(-2)]||'Standard'),fid:fc.id};
+      rm.userData={rn:rn,type:roomTypes[rn]||'Superior Double',fid:fc.id};
       var light=new THREE.PointLight(0x1a1e28,0.06,3);light.position.set(x,fc.y+fH*0.5,z);
       rm.userData.light=light;fg.add(light);
       RM[rn]=rm;fg.add(rm);
     }
     FG[fc.id]=fg;bldg.add(fg);
   }
-  var roofBase=new THREE.Mesh(new THREE.BoxGeometry(7,0.12,7),goldMat.clone());
-  roofBase.position.set(0,fH*4+0.08,0);bldg.add(roofBase);
-  var roofPyr=new THREE.Mesh(new THREE.CylinderGeometry(0.3,3.5,2,4),new THREE.MeshStandardMaterial({color:0x1a1e28,roughness:0.2,metalness:0.5,transparent:true,opacity:0.6}));
-  roofPyr.position.set(0,fH*4+1.2,0);roofPyr.rotation.y=Math.PI/4;bldg.add(roofPyr);
-  var sphere=new THREE.Mesh(new THREE.SphereGeometry(0.2,12,12),goldMat.clone());
-  sphere.position.set(0,fH*4+2.4,0);bldg.add(sphere);
+  // Modern flat roof with glass railing (Orbis style, not pyramid)
+  var roofBase=new THREE.Mesh(new THREE.BoxGeometry(pw+0.5,0.1,pd+0.5),plateMat.clone());
+  roofBase.position.set(0,fH*4+0.05,0);bldg.add(roofBase);
+  var roofTrim=new THREE.Mesh(new THREE.BoxGeometry(pw+0.6,0.03,pd+0.6),goldMat.clone());
+  roofTrim.position.set(0,fH*4+0.11,0);bldg.add(roofTrim);
+  // Glass railing on roof (sky bar)
+  var railF=new THREE.Mesh(new THREE.BoxGeometry(pw,0.6,0.02),glassMat.clone());
+  railF.position.set(0,fH*4+0.42,-pd/2-0.2);bldg.add(railF);
+  var railB=new THREE.Mesh(new THREE.BoxGeometry(pw,0.6,0.02),glassMat.clone());
+  railB.position.set(0,fH*4+0.42,pd/2+0.2);bldg.add(railB);
 }
 function updB(){
   if(!D||!D.roomState)return;var rs=D.roomState;
@@ -304,8 +343,11 @@ function openRoom(num){
   rvE.onmousemove=function(e){if(!rDrg)return;rAY+=(e.clientX-rPv.x)*0.005;rAX=Math.max(0.1,Math.min(0.7,rAX+(e.clientY-rPv.y)*0.005));rPv={x:e.clientX,y:e.clientY}};
   rvE.onwheel=function(e){e.preventDefault();rZm=Math.max(1.5,Math.min(Math.min(curRW,curRD)*0.42,rZm+e.deltaY*0.005))};
   var rs=(D&&D.roomState&&D.roomState[num])||{state:'vacant',guest:'',source:'',checkOut:'',issue:''};
-  var ud=RM[num]?RM[num].userData:{type:'Standard',fid:1};
-  var ut2=ud.type.toLowerCase();if(ut2.indexOf('royal')>=0||ut2.indexOf('presidential')>=0){curRW=12;curRD=9}else if(ut2.indexOf('premium')>=0||ut2.indexOf('jr')>=0){curRW=10;curRD=8}else if(ut2.indexOf('superior')>=0){curRW=9;curRD=7}else if(ut2.indexOf('king')>=0||ut2.indexOf('twin')>=0){curRW=8;curRD=6}else{curRW=7;curRD=5.5}rZm=Math.min(curRW,curRD)*0.55;
+  var ud=RM[num]?RM[num].userData:{type:'Superior Double',fid:1};
+  // All Orbis rooms are ~40m2 average
+  var ut2=ud.type.toLowerCase();
+  if(ut2.indexOf('deluxe')>=0){curRW=9;curRD=7}else{curRW=8;curRD=6.5}
+  rZm=Math.min(curRW,curRD)*0.55;
   var sm={vacant:'Slobodna',occupied:'Zauzeta',request:'Zahtev',urgent:'HITNO'};
   var h='<div class="rv-t">Soba '+num+'</div><div class="rv-tp">'+ud.type.toUpperCase()+' &middot; '+ud.fid+'. SPRAT</div>';
   h+='<div class="rv-r"><span class="rv-rl">Status</span><span class="rv-rv">'+(sm[rs.state]||rs.state)+'</span></div>';
@@ -330,52 +372,36 @@ function closeRoom(){
 }
 
 function buildRoomScene(type,rs){
-  // Clean up old
   if(rRen){
     if(rRen.domElement.parentNode)rRen.domElement.parentNode.removeChild(rRen.domElement);
     rRen.dispose();
   }
   var vp=document.getElementById('vp');
   var w=vp.clientWidth;var h=vp.clientHeight;
-
-  // Create fresh scene
   rScene=new THREE.Scene();
   rScene.background=new THREE.Color(0x1a1e28);
   rScene.userData.problems=[];
-
   rCam=new THREE.PerspectiveCamera(60,w/h,0.1,100);
-  rCam.position.set(2,1.8,2);
-  rCam.lookAt(0,1.2,0);
-
+  rCam.position.set(2,1.8,2);rCam.lookAt(0,1.2,0);
   rRen=new THREE.WebGLRenderer({antialias:true});
-  rRen.setSize(w,h);
-  rRen.setPixelRatio(Math.min(window.devicePixelRatio,1.5));
-  rRen.shadowMap.enabled=true;
-  rRen.toneMapping=THREE.ACESFilmicToneMapping;
-  rRen.toneMappingExposure=1.3;
-
+  rRen.setSize(w,h);rRen.setPixelRatio(Math.min(window.devicePixelRatio,1.5));
+  rRen.shadowMap.enabled=true;rRen.toneMapping=THREE.ACESFilmicToneMapping;rRen.toneMappingExposure=1.3;
   var rvEl=document.getElementById('rv');
   rvEl.insertBefore(rRen.domElement,rvEl.firstChild);
   rRen.domElement.style.cssText='position:absolute;inset:0;z-index:0';
 
-  // Lights - interior view
   rScene.add(new THREE.AmbientLight(0xffffff,0.4));
-  var ceilingLight=new THREE.PointLight(0xFFEEDD,0.8,15);
-  ceilingLight.position.set(0,3.2,0);ceilingLight.castShadow=true;
-  rScene.add(ceilingLight);
+  var ceilingLight=new THREE.PointLight(0xFFEEDD,0.8,15);ceilingLight.position.set(0,3.2,0);ceilingLight.castShadow=true;rScene.add(ceilingLight);
   var warmLight=new THREE.PointLight(0xFFAA66,0.35,8);warmLight.position.set(-1.5,2,-1);rScene.add(warmLight);
   var coolLight=new THREE.PointLight(0x6688CC,0.2,8);coolLight.position.set(2,2,1.5);rScene.add(coolLight);
 
-  // Issue detection
   var issue=(rs.issue||'').toLowerCase();
   var isAC=issue.indexOf('klima')>=0;
   var isPipe=issue.indexOf('curenje')>=0||issue.indexOf('vod')>=0;
   var isTV=issue.indexOf('tv')>=0;
-  var isLamp=issue.indexOf('sijal')>=0;
-  var isFridge=issue.indexOf('mini bar')>=0;
+  var isWifi=issue.indexOf('wifi')>=0;
   var probs=rScene.userData.problems;
 
-  // Simple box helper
   function b(w,h,d,mat,x,y,z){
     var mesh=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),mat);
     mesh.position.set(x,y,z);mesh.castShadow=true;mesh.receiveShadow=true;
@@ -389,7 +415,6 @@ function buildRoomScene(type,rs){
     var l=new THREE.PointLight(color,int,dist);l.position.set(x,y,z);rScene.add(l);
   }
 
-  // Materials
   var floorM=new THREE.MeshStandardMaterial({color:0x3a2a1a,roughness:0.7});
   var wallM=new THREE.MeshStandardMaterial({color:0xd8d0c4,roughness:0.85});
   var ceilM=new THREE.MeshStandardMaterial({color:0xf0ece6,roughness:0.9});
@@ -404,14 +429,10 @@ function buildRoomScene(type,rs){
   var leathM=new THREE.MeshStandardMaterial({color:0x3a2820,roughness:0.7});
   var velvM=new THREE.MeshStandardMaterial({color:0x1a2a40,roughness:0.95});
 
-  // Room size by type
   var t=type.toLowerCase();
   var rW,rD,rH=3.5;
-  if(t.indexOf('royal')>=0||t.indexOf('presidential')>=0){rW=12;rD=9}
-  else if(t.indexOf('premium')>=0||t.indexOf('jr')>=0||t.indexOf('junior')>=0){rW=10;rD=8}
-  else if(t.indexOf('superior')>=0){rW=9;rD=7}
-  else if(t.indexOf('king')>=0||t.indexOf('twin')>=0){rW=8;rD=6}
-  else{rW=7;rD=5.5}
+  if(t.indexOf('deluxe')>=0){rW=9;rD=7}else{rW=8;rD=6.5}
+  var isQueen=t.indexOf('queen')>=0;
 
   // SHELL
   b(rW,0.08,rD,floorM,0,0,0);
@@ -420,18 +441,16 @@ function buildRoomScene(type,rs){
   b(0.08,rH,rD,wallM,rW/2,rH/2,0);
   b(rW,rH,0.08,wallM,0,rH/2,-rD/2);
   b(rW,0.06,rD,ceilM,0,rH,0);
-  // Window
-  b(1.4,1.6,0.06,woodM,0,1.5,-rD/2+0.04);
-  b(1.2,1.4,0.03,glsM,0,1.5,-rD/2+0.03);
-  // Baseboards (gold)
+  // Large window (Orbis has river views)
+  b(1.8,1.8,0.06,woodM,0,1.5,-rD/2+0.04);
+  b(1.6,1.6,0.03,glsM,0,1.5,-rD/2+0.03);
+  // Baseboards
   b(rW,0.04,0.015,goldM,0,0.02,rD/2-0.01);
   b(rW,0.04,0.015,goldM,0,0.02,-rD/2+0.01);
   b(0.015,0.04,rD,goldM,-rW/2+0.01,0.02,0);
   b(0.015,0.04,rD,goldM,rW/2-0.01,0.02,0);
   // Ceiling fixture
-  var lampMat=isLamp?redM:goldM;
-  var lampFix=cyl(0.1,0.1,0.02,lampMat,0,rH-0.02,0);
-  if(isLamp){probs.push(lampFix);pointL(0xFF0000,0.3,4,0,rH-0.1,0)}
+  cyl(0.1,0.1,0.02,goldM,0,rH-0.02,0);
 
   // AC
   var acMat=isAC?redM:whiteM;
@@ -440,13 +459,17 @@ function buildRoomScene(type,rs){
 
   // TV
   var tvMat=isTV?redM:blackM;
-  var tvUnit=b(0.75,0.45,0.03,tvMat,0,1.5,rD/2-0.05);
+  var tvUnit=b(0.85,0.5,0.03,tvMat,0,1.5,rD/2-0.05);
   if(isTV){probs.push(tvUnit);pointL(0xFF0000,0.3,3,0,1.5,rD/2-0.2)}
 
+  // WiFi router (small box on desk area)
+  if(isWifi){
+    var wifiUnit=b(0.08,0.12,0.06,redM,rW/2-0.6,0.78,0);
+    probs.push(wifiUnit);pointL(0xFF0000,0.3,3,rW/2-0.6,0.78,0);
+  }
+
   // Minibar
-  var frMat=isFridge?redM:metM;
-  var frUnit=b(0.3,0.45,0.25,frMat,rW/2-0.25,0.23,-rD/2+0.25);
-  if(isFridge){probs.push(frUnit);pointL(0xFF0000,0.3,3,rW/2-0.25,0.23,-rD/2)}
+  b(0.3,0.45,0.25,metM,rW/2-0.25,0.23,-rD/2+0.25);
   b(0.015,0.12,0.015,goldM,rW/2-0.39,0.25,-rD/2+0.25);
 
   // Wardrobe
@@ -454,7 +477,7 @@ function buildRoomScene(type,rs){
   cyl(0.007,0.007,0.08,goldM,rW/2-0.54,0.95,rD/2-0.35);
 
   // Desk + Chair
-  var dx=rW<6?rW/2-0.55:rW/2-0.65;
+  var dx=rW/2-0.65;
   b(0.9,0.04,0.4,woodM,dx,0.7,0);
   b(0.025,0.65,0.025,metM,dx-0.4,0.34,0.16);
   b(0.025,0.65,0.025,metM,dx+0.4,0.34,0.16);
@@ -463,8 +486,8 @@ function buildRoomScene(type,rs){
   b(0.38,0.03,0.32,fabM,dx,0.42,-0.38);
   b(0.38,0.38,0.03,fabM,dx,0.63,-0.53);
 
-  // Bathroom - proper room with walls and door opening
-  var bW=rW<8?1.6:2.2;var bD=rW<8?1.4:1.8;var bx=-rW/2+bW/2+0.12;var bz=rD/2-bD/2-0.12;
+  // Bathroom
+  var bW=2.0;var bD=1.6;var bx=-rW/2+bW/2+0.12;var bz=rD/2-bD/2-0.12;
   var tileM=new THREE.MeshStandardMaterial({color:0xc8c0b8,roughness:0.15});
   b(bW,0.09,bD,tileM,bx,0.045,bz);
   b(0.06,rH,bD*0.35,wallM,bx+bW/2,rH/2,bz+bD*0.33);
@@ -483,74 +506,53 @@ function buildRoomScene(type,rs){
   cyl(0.012,0.012,0.1,metM,bx,0.73,bz-bD/2+0.13);
   b(0.4,0.5,0.015,new THREE.MeshPhysicalMaterial({color:0xaabbcc,roughness:0.03,metalness:0.95}),bx,1.25,bz-bD/2+0.06);
   pointL(0xFFEEDD,0.4,5,bx,3,bz);
-  b(0.35,0.012,0.012,metM,bx+bW/4+0.1,1.15,bz-bD/2+0.06);
 
   // === BEDS ===
-  if(t.indexOf('twin')>=0){
-    // Two single beds
-    b(1.05,0.28,1.6,woodM,0,0.14,-0.3);
-    b(0.85,0.16,1.4,fabM,0,0.35,-0.3);
-    b(0.3,0.07,0.24,whiteM,0,0.46,-0.85);
-    b(1.05,0.7,0.05,woodM,0,0.63,-1.02);
-    b(1.05,0.28,1.6,woodM,1.25,0.14,-0.3);
-    b(0.85,0.16,1.4,fabM,1.25,0.35,-0.3);
-    b(0.3,0.07,0.24,whiteM,1.25,0.46,-0.85);
-    b(1.05,0.7,0.05,woodM,1.25,0.63,-1.02);
-    b(0.22,0.38,0.22,woodM,0.62,0.19,-0.65);
-    pointL(0xFFDD88,0.2,2,0.62,0.45,-0.65);
-  }else if(t.indexOf('economy')>=0){
-    // Single bed - right side away from bathroom
-    b(1.3,0.28,1.8,woodM,0.4,0.14,-0.3);
-    b(1.1,0.16,1.6,fabM,0.4,0.35,-0.3);
-    b(0.38,0.07,0.26,whiteM,0.4,0.46,-0.95);
-    b(1.3,0.7,0.05,woodM,0.4,0.63,-1.12);
-    b(1.32,0.03,0.06,goldM,0.4,0.98,-1.12);
-    b(0.32,0.38,0.26,woodM,1.2,0.19,-0.7);
-    pointL(0xFFDD88,0.2,2,1.2,0.45,-0.7);
+  if(isQueen){
+    // Two Queen beds
+    var bx1=-rW/4-0.3;var bx2=rW/4-0.5;
+    // Bed 1
+    b(1.5,0.28,1.8,woodM,bx1,0.14,-0.3);
+    b(1.3,0.16,1.6,fabM,bx1,0.35,-0.3);
+    b(0.4,0.07,0.26,whiteM,bx1-0.2,0.46,-0.95);
+    b(0.4,0.07,0.26,whiteM,bx1+0.2,0.46,-0.95);
+    b(1.5,0.8,0.05,velvM,bx1,0.68,-1.12);
+    b(1.52,0.03,0.06,goldM,bx1,1.08,-1.12);
+    // Bed 2
+    b(1.5,0.28,1.8,woodM,bx2,0.14,-0.3);
+    b(1.3,0.16,1.6,fabM,bx2,0.35,-0.3);
+    b(0.4,0.07,0.26,whiteM,bx2-0.2,0.46,-0.95);
+    b(0.4,0.07,0.26,whiteM,bx2+0.2,0.46,-0.95);
+    b(1.5,0.8,0.05,velvM,bx2,0.68,-1.12);
+    b(1.52,0.03,0.06,goldM,bx2,1.08,-1.12);
+    // Nightstand between
+    b(0.25,0.38,0.22,woodM,(bx1+bx2)/2,0.19,-0.65);
+    pointL(0xFFDD88,0.2,2,(bx1+bx2)/2,0.45,-0.65);
   }else{
-    // King bed
-    var bw=t.indexOf('royal')>=0||t.indexOf('presidential')>=0?2.4:2.0;
-    var bx2=-rW/4-(t.indexOf('royal')>=0?0.2:0);
+    // Double/King bed
+    var bw=2.0;var bx2=-rW/4;
     b(bw,0.3,2.0,woodM,bx2,0.15,-0.3);
     b(bw-0.15,0.18,1.8,fabM,bx2,0.38,-0.3);
     b(0.45,0.08,0.3,whiteM,bx2-0.3,0.5,-1.1);
     b(0.45,0.08,0.3,whiteM,bx2+0.3,0.5,-1.1);
-    var hbMat=t.indexOf('superior')>=0||t.indexOf('premium')>=0?velvM:woodM;
-    b(bw,1.1,0.06,hbMat,bx2,0.95,-1.25);
+    b(bw,1.1,0.06,velvM,bx2,0.95,-1.25);
     b(bw+0.02,0.03,0.07,goldM,bx2,1.5,-1.25);
     // Nightstands
     b(0.35,0.42,0.3,woodM,bx2+bw/2+0.25,0.21,-0.8);
     pointL(0xFFDD88,0.2,2,bx2+bw/2+0.25,0.48,-0.8);
     b(0.35,0.42,0.3,woodM,bx2-bw/2-0.25,0.21,-0.8);
     pointL(0xFFDD88,0.2,2,bx2-bw/2-0.25,0.48,-0.8);
-
-    // Extra for big rooms
-    if(t.indexOf('superior')>=0||t.indexOf('premium')>=0||t.indexOf('royal')>=0||t.indexOf('presidential')>=0||t.indexOf('jr')>=0||t.indexOf('junior')>=0){
-      // Sofa
-      b(1.4,0.28,0.6,leathM,rW/4+0.3,0.14,0.4);
-      b(1.4,0.38,0.04,leathM,rW/4+0.3,0.38,0.7);
-      b(0.04,0.38,0.6,leathM,rW/4+0.99,0.38,0.4);
-      b(0.04,0.38,0.6,leathM,rW/4-0.39,0.38,0.4);
-      // Coffee table
-      b(0.7,0.03,0.35,goldM,rW/4+0.3,0.32,-0.05);
-      b(0.025,0.28,0.025,metM,rW/4+0.0,0.15,-0.15);
-      b(0.025,0.28,0.025,metM,rW/4+0.6,0.15,-0.15);
-    }
-    if(t.indexOf('royal')>=0||t.indexOf('presidential')>=0){
-      // Dining table + chairs
-      b(0.9,0.03,0.5,woodM,rW/4+0.3,0.7,rD/2-0.9);
-      b(0.025,0.66,0.025,goldM,rW/4-0.1,0.34,rD/2-1.1);
-      b(0.025,0.66,0.025,goldM,rW/4+0.7,0.34,rD/2-1.1);
-      b(0.025,0.66,0.025,goldM,rW/4-0.1,0.34,rD/2-0.7);
-      b(0.025,0.66,0.025,goldM,rW/4+0.7,0.34,rD/2-0.7);
-      b(0.34,0.03,0.28,fabM,rW/4+0.1,0.4,rD/2-1.4);
-      b(0.34,0.03,0.28,fabM,rW/4+0.5,0.4,rD/2-1.4);
-      pointL(0xFFEEDD,0.35,8,rW/4+0.3,3.2,0);
-    }
-    if(t.indexOf('jr')>=0||t.indexOf('junior')>=0){
-      b(0.04,rH,1.3,new THREE.MeshPhysicalMaterial({color:0x8899aa,roughness:0.1,transparent:true,opacity:0.2}),0,rH/2,0);
-    }
   }
+
+  // Seating area (all Orbis rooms have seating area per their website)
+  b(1.4,0.28,0.6,leathM,rW/4+0.3,0.14,0.4);
+  b(1.4,0.38,0.04,leathM,rW/4+0.3,0.38,0.7);
+  b(0.04,0.38,0.6,leathM,rW/4+0.99,0.38,0.4);
+  b(0.04,0.38,0.6,leathM,rW/4-0.39,0.38,0.4);
+  // Coffee table
+  b(0.7,0.03,0.35,goldM,rW/4+0.3,0.32,-0.05);
+  b(0.025,0.28,0.025,metM,rW/4+0.0,0.15,-0.15);
+  b(0.025,0.28,0.025,metM,rW/4+0.6,0.15,-0.15);
 
   console.log('Room built: '+type+' objects: '+rScene.children.length+' problems: '+probs.length);
 }
@@ -561,16 +563,14 @@ function getSys(){
   var s=D?D.stats:{};var gs=D?D.aktivneSobe||[]:[];var rv=0;
   for(var i=0;i<gs.length;i++)rv+=parseFloat(String(gs[i].Cena||'0').replace(/[^\d.]/g,''))||0;
   var iss=[];if(D&&D.roomState)for(var n in D.roomState)if(D.roomState[n].issue)iss.push('Soba '+n+': '+D.roomState[n].issue);
-  // Build guest list for analysis
   var gList='';for(var gi=0;gi<gs.length;gi++){var g=gs[gi];gList+='- Soba '+g.Soba+': '+g.Gost+', '+g.Cena+', '+(g.Izvor||'N/A')+', check-out: '+(g.CheckOut||'N/A')+'\n';}
   var occ=s.total?Math.round((s.occupied||0)/s.total*100):0;
   var bkCount=0;var anCount=0;for(var ci=0;ci<gs.length;ci++){if(gs[ci].Izvor==='Booking.com')bkCount++;else anCount++;}
-  // Room state summary
   var rsList='';if(D&&D.roomState){for(var rk in D.roomState){var rs2=D.roomState[rk];if(rs2.state!=='vacant')rsList+='Soba '+rk+': '+rs2.state+', Gost: '+rs2.guest+', Izvor: '+rs2.source+', Check-out: '+rs2.checkOut+(rs2.issue?', PROBLEM: '+rs2.issue:'')+'\n';}}
 
-  return 'Ti si Digital Twin AI asistent za Hotel Moskva, Beograd (4 zvezdice, osnovan 1908). Odgovaraj na srpskom. Budi precizan, konkretan, koristeci brojke i podatke. Daji analize, preporuke i prognoze kad je relevantno.\n\n'
+  return 'Ti si Digital Twin AI asistent za Orbis Design Hotel & Spa, Paracin (4 zvezdice, moderan dizajnerski butik hotel). Odgovaraj na srpskom. Budi precizan, konkretan, koristeci brojke i podatke. Daji analize, preporuke i prognoze kad je relevantno.\n\n'
   +'== STATISTIKA ==\n'
-  +'Ukupno soba: '+(s.total||35)+'\n'
+  +'Ukupno soba: '+(s.total||32)+'\n'
   +'Zauzeto: '+(s.occupied||0)+' ('+occ+'%)\n'
   +'Slobodne: '+(s.vacant||0)+'\n'
   +'Aktivni zahtevi: '+(s.request||0)+'\n'
@@ -578,6 +578,11 @@ function getSys(){
   +'Booking.com gosti: '+bkCount+'\n'
   +'Ana AI gosti: '+anCount+'\n'
   +'Ukupan dnevni prihod: EUR '+rv+'\n\n'
+  +'== TIPOVI SOBA ==\n'
+  +'Superior Double (14 soba) - bracni krevet, standardna oprema, ~40m2\n'
+  +'Deluxe Double (7 soba) - bracni krevet + besplatan Spa pristup, ~40m2\n'
+  +'Superior Queen (7 soba) - 2 Queen kreveta, standardna oprema, ~40m2\n'
+  +'Deluxe Queen (4 soba) - 2 Queen kreveta + besplatan Spa pristup, ~40m2\n\n'
   +'== AKTIVNI GOSTI ==\n'
   +(gList||'Nema aktivnih gostiju\n')+'\n'
   +'== STANJE SOBA ==\n'
@@ -588,24 +593,29 @@ function getSys(){
   +'Mozes da analiziras: popunjenost (trend, prognoza), prihod (prosek po sobi, ukupno), izvore rezervacija (Booking vs Ana AI procenat), probleme (prioritet, vreme resavanja), check-out raspored (ko odlazi danas/sutra), cenovnu strategiju (elasticnost ~0.3, predlozi za dynamic pricing), RevPAR, ADR metrike.\n'
   +'Kad korisnik pita o cenama, koristi elasticnost 0.3 - za svakih 10% promene cene, potraznja se menja ~3%.\n'
   +'Uvek daj konkretne brojeve, procente, i preporuke. Formatiraj odgovore pregledno sa boldovanim kljucnim brojevima.\n\n'
-  +'== TRZISNI PODACI - KONKURENCIJA (LIVE) ==\n'
-  +'Ovo su trenutne prosecne cene konkurentskih hotela u Beogradu za standardnu sobu:\n'
-  +'| Hotel | Zvezde | Standard | Superior | Suite | Prosek/noc |\n'
-  +'| Hotel Moskva | 4* | EUR 95 | EUR 135 | EUR 220 | EUR 134 |\n'
-  +'| Metropol Palace | 5* | EUR 130 | EUR 175 | EUR 320 | EUR 195 |\n'
-  +'| Hilton Belgrade | 5* | EUR 140 | EUR 195 | EUR 350 | EUR 209 |\n'
-  +'| Hyatt Regency | 5* | EUR 135 | EUR 185 | EUR 340 | EUR 198 |\n'
-  +'| Square Nine | 5* | EUR 180 | EUR 250 | EUR 450 | EUR 280 |\n'
-  +'| Saint Ten | 5* | EUR 160 | EUR 220 | EUR 380 | EUR 245 |\n\n'
+  +'== TRZISNI PODACI - KONKURENCIJA ==\n'
+  +'Ovo su trenutne prosecne cene konkurentskih hotela u regionu:\n'
+  +'| Hotel | Zvezde | Standard | Deluxe | Prosek/noc |\n'
+  +'| Orbis Design Hotel & Spa (Paracin) | 4* | EUR 70 | EUR 95 | EUR 80 |\n'
+  +'| Hotel Garni Nicolo (Paracin) | 3* | EUR 40 | EUR 55 | EUR 45 |\n'
+  +'| Hotel Saradis (Jagodina) | 4* | EUR 55 | EUR 75 | EUR 62 |\n'
+  +'| Hotel & Spa De Lux Nedeljkovic (Jagodina) | 4* | EUR 65 | EUR 90 | EUR 75 |\n'
+  +'| Hotel Kragujevac (Kragujevac) | 4* | EUR 60 | EUR 85 | EUR 70 |\n'
+  +'| Hotel Crystal (Krusevac) | 4* | EUR 50 | EUR 70 | EUR 58 |\n\n'
   +'ANALIZA KONKURENCIJE:\n'
-  +'- Hotel Moskva je jedini 4* u ovoj grupi, ali ima heritage premium (1908, landmark)\n'
-  +'- Moskva je 30-40% jeftiniji od Hilton/Hyatt za isti tip sobe\n'
-  +'- Square Nine i Saint Ten su boutique/luxury segment, 50-80% skuplji\n'
-  +'- Moskva ima prostora za podizanje cena za 15-25% bez gubitka popunjenosti\n'
-  +'- Benchmark: prosek 5* u BG = EUR 225/noc, Moskva = EUR 134/noc\n'
-  +'- RevPAR benchmark BG luxury: EUR 145-165\n'
-  +'- Sezonalnost: letnja sezona (jun-sep) +20-30% cene, zimska -10-15%\n'
-  +'- Vikend premijum: pet-ned +10-15% vs pon-cet\n\n'
+  +'- Orbis je premium 4* u regionu Pomoravlja sa najboljim Spa sadrzajem\n'
+  +'- Orbis je 15-30% skuplji od konkurencije ali nudi Spa, bazen, Sky Bar\n'
+  +'- Hotel ima prostora za premium pricing na Deluxe sobe sa Spa pristupom\n'
+  +'- Lokacija na autoputu je prednost za tranzitne goste i poslovne putnike\n'
+  +'- Blizina manastira (Manasija, Ravanica) privlaci kulturne turiste\n'
+  +'- Vikend paketi (Spa Weekend, Weekend for Lovers) mogu podici ADR za 20-30%\n'
+  +'- Sezonalnost: leto +15-20% (turisti), zima -10% ali kompenzuje Spa potraznja\n\n'
+  +'== O HOTELU ==\n'
+  +'Orbis Design Hotel & Spa se nalazi u centru Paracina, sa pogledom na reku i gradski park.\n'
+  +'32 sobe, prosecna velicina ~40m2. Ima indoor bazen, tursko kupatilo, saunu, djakuzi, fitnes.\n'
+  +'Restoran nudi internacionalnu, italijansku i seafood kuhinju.\n'
+  +'Sky Bar na krovu sa panoramskim pogledom. Sale za sastanke i vencanja.\n'
+  +'Parking 10 EUR/dan. Check-in 14:00, Check-out 12:00. Ljubimci dozvoljeni na upit.\n\n'
   +'Kad korisnik pita o konkurenciji ili cenama, koristi ove podatke za konkretna poredjenja. Predlazi pricing strategije bazirane na trzisnoj poziciji.';
 }
 function snd(){
@@ -634,7 +644,7 @@ function updIns(){
   for(var i=0;i<gs.length;i++)rv+=parseFloat(String(gs[i].Cena||'0').replace(/[^\d.]/g,''))||0;
   var p=s.total?Math.round((s.occupied||0)/s.total*100):0;
   var iss=[];if(D.roomState)for(var n in D.roomState)if(D.roomState[n].issue)iss.push({r:n,i:D.roomState[n].issue});
-  var h='<div class="ic"><div class="ic-h">Popunjenost</div><div class="ic-bg">'+p+'%</div><div class="ic-tx">'+(s.occupied||0)+' / '+(s.total||35)+'</div></div>';
+  var h='<div class="ic"><div class="ic-h">Popunjenost</div><div class="ic-bg">'+p+'%</div><div class="ic-tx">'+(s.occupied||0)+' / '+(s.total||32)+'</div></div>';
   h+='<div class="ic"><div class="ic-h">Prihod</div><div class="ic-bg">EUR '+rv+'</div></div>';
   if(iss.length){h+='<div class="ic al"><div class="ic-h">Problemi: '+iss.length+'</div><div class="ic-tx">';for(var j=0;j<iss.length;j++)h+='Soba '+iss[j].r+': '+iss[j].i+(j<iss.length-1?'<br>':'');h+='</div></div>'}
   document.getElementById('insP').innerHTML=h;
