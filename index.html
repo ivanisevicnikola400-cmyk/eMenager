@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>eMenadžer — Hotel Management System</title>
+<title>eMenadžer — Orbis Design Hotel & Spa</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{--bg:#0B0E14;--sf:#12161F;--bd:#1C2130;--bl:#252B3B;--tx:#E0E4EC;--dim:#6B7280;--dk:#3D4455;--grn:#22C55E;--blu:#3B82F6;--yel:#EAB308;--red:#EF4444;--gld:#C9A84C}
@@ -90,7 +90,7 @@ body{background:var(--bg);color:var(--tx);font-family:'Segoe UI',system-ui,sans-
 <body>
 <div class="app">
 <div class="hdr">
-  <div class="logo"><div class="logo-i">e</div><div><div class="logo-t">eMenadžer</div><div class="logo-s">Hotel Moskva</div></div></div>
+  <div class="logo"><div class="logo-i">e</div><div><div class="logo-t">eMenadžer</div><div class="logo-s">Orbis Design Hotel & Spa</div></div></div>
   <div class="fnav" id="fnav"></div>
   <div class="hstats">
     <div class="hs"><div class="hs-v g" id="sv">0</div><div class="hs-l">Slobodne</div></div>
@@ -136,12 +136,24 @@ const POLL_INTERVAL = 30000;
 
 let CF = 1, DATA = null, prevNotifCount = 0;
 
-// Fallback floor layout if API hasn't loaded yet
+// Orbis Design Hotel & Spa — 32 soba, 4 sprata, 8 soba po spratu
 const FLOORS_DEFAULT = [
-  {id:1,name:'1. sprat',label:'Prizemlje',rows:[[{n:'101',t:'Economy'},{n:'102',t:'Std Twin'},{n:'103',t:'Std King'},{n:'104',t:'Economy'},{n:'105',t:'Std King'}],[{n:'106',t:'Superior'},{n:'107',t:'Std King'},{n:'108',t:'Economy'},{n:'109',t:'Std Twin'},{n:'110',t:'Economy'}]]},
-  {id:2,name:'2. sprat',label:'Drugi sprat',rows:[[{n:'201',t:'Superior'},{n:'202',t:'Std King'},{n:'203',t:'Jr Suite'},{n:'204',t:'Std Twin'},{n:'205',t:'Superior'}],[{n:'206',t:'Std King'},{n:'207',t:'Superior'},{n:'208',t:'Economy'},{n:'209',t:'Std King'},{n:'210',t:'Superior'}]]},
-  {id:3,name:'3. sprat',label:'Treći sprat',rows:[[{n:'301',t:'Premium'},{n:'302',t:'Superior'},{n:'303',t:'Std King'},{n:'304',t:'Superior'},{n:'305',t:'Std Twin'}],[{n:'306',t:'Std King'},{n:'307',t:'Jr Suite'},{n:'308',t:'Superior'},{n:'309',t:'Economy'},{n:'310',t:'Std King'}]]},
-  {id:4,name:'4. sprat',label:'Četvrti sprat',rows:[[{n:'401',t:'Royal'},{n:'402',t:'Premium'},{n:'403',t:'Jr Suite'}],[{n:'404',t:'Presidential'},{n:'405',t:'Royal'}]]}
+  {id:1,name:'1. sprat',label:'Prvi sprat',rows:[
+    [{n:'101',t:'Superior Double'},{n:'102',t:'Superior Double'},{n:'103',t:'Deluxe Double'},{n:'104',t:'Superior Queen'}],
+    [{n:'105',t:'Superior Double'},{n:'106',t:'Deluxe Queen'},{n:'107',t:'Superior Double'},{n:'108',t:'Superior Queen'}]
+  ]},
+  {id:2,name:'2. sprat',label:'Drugi sprat',rows:[
+    [{n:'201',t:'Deluxe Double'},{n:'202',t:'Superior Double'},{n:'203',t:'Superior Queen'},{n:'204',t:'Superior Double'}],
+    [{n:'205',t:'Deluxe Double'},{n:'206',t:'Superior Double'},{n:'207',t:'Deluxe Queen'},{n:'208',t:'Superior Queen'}]
+  ]},
+  {id:3,name:'3. sprat',label:'Treći sprat',rows:[
+    [{n:'301',t:'Deluxe Double'},{n:'302',t:'Superior Double'},{n:'303',t:'Superior Double'},{n:'304',t:'Deluxe Queen'}],
+    [{n:'305',t:'Superior Queen'},{n:'306',t:'Superior Double'},{n:'307',t:'Deluxe Double'},{n:'308',t:'Superior Queen'}]
+  ]},
+  {id:4,name:'4. sprat',label:'Četvrti sprat',rows:[
+    [{n:'401',t:'Deluxe Double'},{n:'402',t:'Superior Double'},{n:'403',t:'Superior Double'},{n:'404',t:'Deluxe Queen'}],
+    [{n:'405',t:'Superior Queen'},{n:'406',t:'Deluxe Double'},{n:'407',t:'Superior Double'},{n:'408',t:'Superior Queen'}]
+  ]}
 ];
 
 function getFloors() {
@@ -262,7 +274,7 @@ async function rv(reqId) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ requestId: reqId })
     });
-    fetchData(); // refresh immediately
+    fetchData();
   } catch (e) { console.error('Resolve error:', e); }
 }
 
